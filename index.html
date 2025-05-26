@@ -1,38 +1,89 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Чат с княжичем Олешкой</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>ꙗꙁь чьтєсѧ сѣй свитокъ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Подключение VK Bridge -->
+  <!-- VK Bridge -->
   <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
   <script>
-    // Инициализация VK Mini App
     vkBridge.send('VKWebAppInit');
   </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Marck+Script&display=swap" rel="stylesheet">
 
   <style>
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
-      background-color: #f0f0f0;
-      font-family: sans-serif;
-      overflow: hidden;
+      background: url('https://i.imgur.com/F1S0ZhD.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Marck Script', cursive;
+      color: #4B2E0B;
+    }
+
+    .scroll-container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2rem;
+      background: rgba(255, 245, 220, 0.9);
+      border: 10px solid #c9a66b;
+      border-image: url('https://i.imgur.com/FkS9V5P.png') 30 round;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+      border-radius: 15px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 95vh;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
     }
 
     iframe {
       width: 100%;
-      height: 100%;
+      height: 70vh;
       border: none;
+      border-radius: 10px;
+    }
+
+    .back-button {
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .back-button a {
+      background: #c9a66b;
+      color: #3b240c;
+      padding: 0.5rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: bold;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    }
+
+    .back-button a:hover {
+      background: #b9924f;
     }
   </style>
 </head>
+
 <body>
+  <div class="scroll-container">
+    <h1>ꙗꙁь чьтєсѧ сѣй свитокъ, гдѣ глаголеть Олѣшка, княжичъ из Поднѣбєсьѧ</h1>
 
-  <!-- ЗАМЕНИ ССЫЛКУ НИЖЕ НА СВОЮ Chatbase-ссылку -->
-  <iframe src="https://www.chatbase.co/chatbot-iframe/mo2XekPy05IvkEh4imI09"></iframe>
+    <iframe src="https://www.chatbase.co/chatbot-iframe/mo2XekPy05IvkEh4imI09"></iframe>
 
+    <div class="back-button">
+      <a href="https://vk.com/kniazhich" target="_blank">← Назад в Поднебесье</a>
+    </div>
+  </div>
 </body>
 </html>
