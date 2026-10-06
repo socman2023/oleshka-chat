@@ -1,7 +1,7 @@
 const CONFIG = {
   characterId: "oleshka",
-  apiUrl: "",
-  useMock: true,
+  apiUrl: "https://oleshka-chat-api.boysinger2008.workers.dev/api/chat",
+  useMock: false,
 };
 
 const messagesEl = document.getElementById("messages");
