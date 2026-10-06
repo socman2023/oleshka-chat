@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "oleshka-chat-api",
+  "main": "worker.js",
+  "compatibility_date": "2026-10-01",
+  "ai": {
+    "binding": "AI"
+  },
+  "vectorize": [
+    {
+      "binding": "KNOWLEDGE",
+      "index_name": "heroes-knowledge"
+    }
+  ]
+}
