@@ -1,0 +1,5 @@
+# Private/local RAG payloads. The repository is public.
+knowledge/private/
+knowledge/chunks_*.jsonl
+*.env
+.dev.vars
