@@ -1,85 +1,248 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <title>ꙗꙁь чьтєсѧ сѣй свитокъ</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- VK Bridge -->
-  <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
-  <script>
-    vkBridge.send('VKWebAppInit');
-  </script>
-
-  <link href="https://fonts.googleapis.com/css2?family=Marck+Script&display=swap" rel="stylesheet">
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#eee1c8">
+  <meta name="description" content="Поговори с княжичем Олешкой из мира Поднебесья.">
+  <title>Олешка — разговор с княжичем</title>
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background: #e8d8b9;
-      font-family: 'Marck Script', cursive;
-      color: #4B2E0B;
+    :root {
+      color-scheme: light;
+      --ink: #382c23;
+      --muted: #746559;
+      --parchment: #fbf6e9;
+      --surface: #fffdf7;
+      --gold: #a67b41;
+      --line: #decbaa;
+      --wine: #744638;
+      --wine-dark: #5a322a;
+      --shadow: 0 16px 58px rgba(62, 39, 24, .13);
     }
-
-    .scroll-container {
-      max-width: 960px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background-image: url('./slavic_frame_border.png');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-      border-radius: 12px;
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      font: 16px/1.48 system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      background: radial-gradient(circle at 5% 0, #fdf7e9 0, transparent 32%),
+        radial-gradient(circle at 95% 90%, #ead3ae 0, transparent 42%), #eee1c8;
     }
-
-    h1 {
-      text-align: center;
-      font-size: 2rem;
-      margin-bottom: 1rem;
+    button, textarea { font: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, textarea:focus-visible, a:focus-visible { outline: 3px solid #bb8c4c; outline-offset: 3px; }
+    .page { width: min(1120px, 100% - 32px); height: min(880px, calc(100dvh - 36px)); min-height: 540px; display: grid;
+      grid-template-columns: 305px minmax(0, 1fr); margin: 18px auto; background: var(--surface);
+      border: 1px solid #c9ac7d; border-radius: 18px; overflow: hidden; box-shadow: var(--shadow); }
+    .aside { background: #f1e4cc; border-right: 1px solid var(--line); display: flex; flex-direction: column;
+      position: relative; padding: 30px 25px 23px; }
+    .aside::before { content: ""; position: absolute; inset: 10px; pointer-events: none; border: 1px solid rgba(166,123,65,.25); border-radius: 12px; }
+    .brand-icon { width: 78px; height: 78px; border: 2px solid #b89255; border-radius: 50%; display: grid;
+      place-items: center; margin: 12px 0 24px; font: bold 50px Georgia, "Times New Roman", serif;
+      background: #fff7e3; box-shadow: 0 0 0 6px #f7ead5; color: var(--wine); }
+    .eyebrow { text-transform: uppercase; letter-spacing: .18em; color: #8d714e; font-size: 10px; font-weight: 800; }
+    .aside h1 { font: 700 44px/1.1 Georgia, "Times New Roman", serif; margin: 7px 0 12px; color: var(--wine-dark); }
+    .aside p { font-size: 14px; line-height: 1.65; margin: 0 0 22px; max-width: 220px; }
+    .ornament { font: 24px Georgia, serif; color: #ad8451; letter-spacing: .35em; margin: 1px 0 20px; }
+    .aside-foot { margin-top: auto; position: relative; font-size: 12px; color: #6e5946; line-height: 1.6; }
+    .aside-foot a { color: #684435; text-underline-offset: 3px; }
+    .main { min-width: 0; min-height: 0; display: flex; flex-direction: column; background: var(--surface); }
+    .topbar { padding: 20px 24px; border-bottom: 1px solid var(--line); display: flex; align-items: center;
+      gap: 12px; justify-content: space-between; background: #fffcf5; }
+    .top-title { font: 700 21px/1.2 Georgia, "Times New Roman", serif; }
+    .top-sub { font-size: 12px; margin-top: 4px; color: var(--muted); }
+    .new { white-space: nowrap; border-radius: 99px; padding: 10px 13px; background: transparent;
+      border: 1px solid #ccb48f; font-size: 13px; color: #65483a; font-weight: 650; }
+    .new:hover { background: #f7ecd8; }
+    .messages { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 27px 28px 28px;
+      display: flex; flex-direction: column; gap: 17px; background:
+      linear-gradient(rgba(255,253,247,.94), rgba(255,253,247,.94)), url("./slavic_frame_border.png") center/cover no-repeat; }
+    .message { max-width: min(86%, 640px); min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+    .message.model { align-self: flex-start; }
+    .message.user { align-self: flex-end; }
+    .byline { font-size: 11px; font-weight: 700; color: #94744d; letter-spacing: .04em; padding: 0 8px; }
+    .message.user .byline { text-align: right; color: #8a756b; }
+    .bubble { padding: 13px 17px; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.65;
+      background: #f8eedb; border: 1px solid #e4d2b1; border-radius: 15px 15px 15px 4px; }
+    .message.user .bubble { color: #fffaf0; background: var(--wine); border-color: var(--wine);
+      border-radius: 15px 15px 4px 15px; }
+    .message.pending .bubble { font-style: italic; color: #8c7868; }
+    .error { border: 1px solid #d6ae9c; border-radius: 10px; background: #fff3ed; color: #763b29;
+      padding: 10px 14px; font-size: 13px; margin: 0 24px 12px; }
+    .error[hidden] { display: none; }
+    .composer-wrap { padding: 13px 20px max(17px, env(safe-area-inset-bottom)); background: #fffcf5;
+      border-top: 1px solid var(--line); }
+    .composer { display: flex; gap: 10px; align-items: flex-end; }
+    .composer textarea { flex: 1; min-width: 0; width: 100%; max-height: 152px; min-height: 50px; resize: none;
+      padding: 12px 14px; border: 1px solid #cdb995; background: #fff; border-radius: 12px;
+      outline-offset: 2px; color: var(--ink); }
+    .composer textarea::placeholder { color: #9a8b7c; }
+    .send { display: flex; justify-content: center; align-items: center; width: 50px; height: 50px;
+      border: 0; border-radius: 12px; color: #fff; background: var(--wine); font-size: 22px; }
+    .send:hover { background: var(--wine-dark); }
+    .send:disabled, textarea:disabled { opacity: .55; cursor: not-allowed; }
+    .composer-note { font-size: 11px; color: #857366; margin-top: 7px; text-align: right; }
+    @media (max-width: 750px) {
+      body { background: var(--surface); }
+      .page { width: 100%; height: 100dvh; min-height: 0; margin: 0; grid-template-columns: minmax(0,1fr); border: 0; border-radius: 0; box-shadow: none; }
+      .aside { display: none; }
+      .topbar { padding: 13px 15px; }
+      .top-title { font-size: 20px; }
+      .messages { padding: 18px 13px 24px; gap: 16px; }
+      .message { max-width: 91%; }
+      .bubble { padding: 11px 13px; }
+      .composer-wrap { padding: 11px 11px max(12px, env(safe-area-inset-bottom)); }
+      .composer-note { font-size: 10px; }
+      .new { font-size: 12px; padding: 9px 11px; }
     }
-
-    iframe {
-      width: 100%;
-      height: 70vh;
-      border: none;
-      border-radius: 8px;
-    }
-
-    .back-button {
-      text-align: center;
-      margin-top: 1.5rem;
-    }
-
-    .back-button a {
-      background: #c9a66b;
-      color: #3b240c;
-      padding: 0.6rem 1.6rem;
-      border-radius: 6px;
-      text-decoration: none;
-      font-size: 1rem;
-      font-weight: bold;
-      box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-    }
-
-    .back-button a:hover {
-      background: #b9924f;
-    }
+    @media (prefers-reduced-motion: no-preference) { .bubble { animation: appear .22s ease-out; }
+      @keyframes appear { from { opacity: .6; transform: translateY(4px); } to { opacity: 1; transform: none; } } }
   </style>
 </head>
-
 <body>
-  <div class="scroll-container">
-    <h1>ꙗꙁь чьтєсѧ сѣй свитокъ, гдѣ глаголеть Олѣшка, княжичъ из Поднѣбєсьѧ</h1>
-
-    <iframe src="https://www.chatbase.co/chatbot-iframe/mo2XekPy05IvkEh4imI09"></iframe>
-
-    <div class="back-button">
-      <a href="https://vk.com/kniazhich" target="_blank">← Назад в Поднебесье</a>
-    </div>
+  <div class="page">
+    <aside class="aside" aria-label="О персонаже">
+      <div class="brand-icon" aria-hidden="true">О</div>
+      <div class="eyebrow">Поднебесье · Академия</div>
+      <h1>Олешка</h1>
+      <p>Княжич, ученик Академии Светозара. Можно просто поболтать или расспросить о друзьях и приключениях.</p>
+      <div class="ornament" aria-hidden="true">✦ ❦ ✦</div>
+      <div class="aside-foot">Разговор остаётся в этом браузере и не переносится между устройствами.<br>
+        <a href="https://vk.com/kniazhich" target="_blank" rel="noopener noreferrer">Вернуться в Поднебесье ↗</a></div>
+    </aside>
+    <section class="main" aria-label="Переписка с Олешкой">
+      <header class="topbar">
+        <div><div class="top-title">Разговор с Олешкой</div><div class="top-sub">Княжич из Академии Светозара</div></div>
+        <button class="new" id="new-chat" type="button" title="Начать новый разговор">↻ Новый разговор</button>
+      </header>
+      <main class="messages" id="messages" role="log" aria-live="polite" aria-relevant="additions text"></main>
+      <div class="error" id="error" role="alert" hidden></div>
+      <div class="composer-wrap">
+        <form class="composer" id="composer">
+          <textarea id="input" name="message" maxlength="4000" rows="1" aria-label="Сообщение Олешке" placeholder="Напиши Олешке…" required></textarea>
+          <button type="submit" class="send" id="send" aria-label="Отправить сообщение">↑</button>
+        </form>
+        <div class="composer-note">Enter — отправить · Shift+Enter — новая строка</div>
+      </div>
+    </section>
   </div>
+  <script>
+  (() => {
+    'use strict';
+    const API = 'https://oleshka-chat-api.boysinger2008.workers.dev/api/chat';
+    const STORAGE_KEY = 'oleshka-native-chat-v1';
+    const MAX_SAVED = 80;
+    const MAX_CONTEXT = 12;
+    const greeting = 'О, привет! Здорово, что заглянул! Как дела?';
+    const container = document.getElementById('messages');
+    const form = document.getElementById('composer');
+    const input = document.getElementById('input');
+    const send = document.getElementById('send');
+    const errorBox = document.getElementById('error');
+    const newButton = document.getElementById('new-chat');
+    let busy = false;
+    let focusDate = '';
+    let conversation = [];
+
+    function loadSaved() {
+      try {
+        const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        if (Array.isArray(data.messages)) {
+          conversation = data.messages.filter(m => m && (m.role === 'user' || m.role === 'model') && typeof m.text === 'string').slice(-MAX_SAVED);
+        }
+        if (typeof data.focusDate === 'string') focusDate = data.focusDate;
+      } catch (_) { conversation = []; focusDate = ''; }
+    }
+    function save() {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ messages: conversation.slice(-MAX_SAVED), focusDate })); }
+      catch (_) { /* Private mode and storage limits: chat remains usable. */ }
+    }
+    function showError(message) { errorBox.textContent = message; errorBox.hidden = !message; }
+    function bubble(role, text, pending = false) {
+      const wrap = document.createElement('div');
+      wrap.className = 'message ' + role + (pending ? ' pending' : '');
+      const name = document.createElement('div');
+      name.className = 'byline';
+      name.textContent = role === 'user' ? 'Ты' : 'Олешка';
+      const body = document.createElement('div');
+      body.className = 'bubble';
+      body.textContent = text; // Never insert model text as HTML.
+      wrap.append(name, body);
+      container.appendChild(wrap);
+      container.scrollTop = container.scrollHeight;
+      return wrap;
+    }
+    function render() {
+      container.replaceChildren();
+      if (!conversation.length) bubble('model', greeting);
+      else for (const msg of conversation) bubble(msg.role, msg.text);
+    }
+    function resize() {
+      input.style.height = 'auto';
+      input.style.height = Math.min(Math.max(input.scrollHeight, 50), 152) + 'px';
+    }
+    function setBusy(value) { busy = value; send.disabled = value; input.disabled = value; newButton.disabled = value; }
+
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      const question = input.value.trim();
+      if (!question || busy) return;
+      showError('');
+      const previous = conversation.slice(-MAX_CONTEXT);
+      const userNode = bubble('user', question);
+      const pending = bubble('model', 'Пишет…', true);
+      input.value = '';
+      resize();
+      setBusy(true);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 75000);
+      try {
+        const response = await fetch(API, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: controller.signal,
+          body: JSON.stringify({ message: question, history: previous, focusDate })
+        });
+        const data = await response.json();
+        if (!response.ok || typeof data.reply !== 'string' || !data.reply.trim()) {
+          throw new Error(response.status === 429 ? 'Лимит разговоров временно исчерпан. Попробуй позже.' :
+            'Не получилось отправить сообщение. Попробуй ещё раз.');
+        }
+        pending.remove();
+        bubble('model', data.reply);
+        conversation.push({role: 'user', text: question}, {role: 'model', text: data.reply});
+        conversation = conversation.slice(-MAX_SAVED);
+        focusDate = typeof data.knowledge?.focusDate === 'string' ? data.knowledge.focusDate : '';
+        save();
+      } catch (error) {
+        pending.remove();
+        userNode.remove();
+        input.value = question;
+        resize();
+        showError(error.name === 'AbortError' ? 'Ответ слишком долго не приходит. Попробуй ещё раз.' :
+          (error instanceof TypeError ? 'Нет соединения с сервером. Проверь интернет и попробуй снова.' : error.message));
+      } finally {
+        clearTimeout(timeoutId);
+        setBusy(false);
+        input.focus();
+      }
+    });
+    input.addEventListener('keydown', event => {
+      if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) {
+        event.preventDefault();
+        form.requestSubmit();
+      }
+    });
+    input.addEventListener('input', resize);
+    newButton.addEventListener('click', () => {
+      if (!conversation.length || confirm('Начать новый разговор? Прежняя переписка будет удалена из этого браузера.')) {
+        conversation = [];
+        focusDate = '';
+        try { localStorage.removeItem(STORAGE_KEY); } catch (_) { /* no storage access */ }
+        showError('');
+        render();
+        input.focus();
+      }
+    });
+    loadSaved(); render(); resize();
+  })();
+  </script>
 </body>
 </html>
