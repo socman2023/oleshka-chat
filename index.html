@@ -1,85 +1,351 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <title>ꙗꙁь чьтєсѧ сѣй свитокъ</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- VK Bridge -->
-  <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
-  <script>
-    vkBridge.send('VKWebAppInit');
-  </script>
-
-  <link href="https://fonts.googleapis.com/css2?family=Marck+Script&display=swap" rel="stylesheet">
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1d2c38">
+  <meta name="description" content="Разговор с княжичем Олешкой из Поднебесья.">
+  <title>Олешка — разговор из Академии</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Forum&family=Marck+Script&family=Neucha&family=Ruslan+Display&display=swap" rel="stylesheet">
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background: #e8d8b9;
-      font-family: 'Marck Script', cursive;
-      color: #4B2E0B;
+    :root {
+      color-scheme: light;
+      --ink: #2d2d2a;
+      --muted: #756c60;
+      --paper: #f3ebd8;
+      --paper-light: #faf5e7;
+      --old-paper: #e6d8b9;
+      --line: #bca378;
+      --gold: #d2ae6b;
+      --copper: #b6884c;
+      --blue: #1c303e;
+      --blue-dark: #11232e;
+      --russet: #823f33;
+      --russet-dark: #602b26;
     }
+    *, *::before, *::after { box-sizing: border-box; }
+    html,body { min-height: 100%; margin: 0; }
+    body { font: 17px/1.5 'Forum', Georgia, serif; color: var(--ink);
+      background: radial-gradient(ellipse at 50% 0%,#d7c4a5 0%,transparent 48%),
+        linear-gradient(135deg,#1a2832,#3a3b32 45%,#1b2b35); }
+    button,textarea { font: 18px/1.3 'Neucha', 'Forum', Georgia, serif; }
+    button { cursor: pointer; }
+    button:focus-visible,textarea:focus-visible,a:focus-visible { outline: 3px solid #d1a057; outline-offset: 3px; }
+    .page { width: min(1200px,calc(100% - 40px)); height: min(900px,calc(100dvh - 44px)); min-height: 550px;
+      display: grid; grid-template-columns: 353px minmax(0,1fr); margin: 22px auto;
+      background: var(--paper); border: 1px solid #bc9a5b;
+      box-shadow: 0 30px 95px #0007, 0 0 0 5px #1e2b31, 0 0 0 6px #957a50;
+      overflow: hidden; }
+    /* Actual photograph from the project Drive album “Академия (новый альбом)”. */
+    .aside { min-width: 0; position: relative; overflow: hidden; display: flex; flex-direction: column;
+      padding: 34px 24px 25px; color: #fff1d6; isolation:isolate;
+      background: #1c2830; border-right:4px double #c09a60; }
+    .aside::before { content:""; position:absolute; z-index:-2; inset:0;
+      background: url('./academy.jpg') 66% center / cover no-repeat;
+      filter:saturate(.83) contrast(1.06); transform:scale(1.02); }
+    .aside::after { content:""; position:absolute; z-index:-1; inset:0;
+      background: linear-gradient(180deg,rgba(9,20,29,.96) 0%,rgba(10,23,34,.88) 23%,rgba(14,23,29,.19) 47%,rgba(13,22,26,.23) 64%,rgba(9,19,25,.92) 88%,rgba(9,19,25,.98) 100%); }
+    .aside .faint-frame { position:absolute; inset:12px; border:1px solid #eac58b9c; pointer-events:none; }
+    .aside .faint-frame::after { content:""; position:absolute; inset:6px; border:1px solid #eac58b44; }
+    .corner { position:absolute; width:34px; height:34px; z-index:1; pointer-events:none; }
+    .corner.tl { top:12px; left:12px; border-top: 2px solid #e0ba7b; border-left:2px solid #e0ba7b; }
+    .corner.tr { top:12px; right:12px; border-top: 2px solid #e0ba7b; border-right:2px solid #e0ba7b; }
+    .corner.bl { bottom:12px; left:12px; border-bottom: 2px solid #e0ba7b; border-left:2px solid #e0ba7b; }
+    .corner.br { bottom:12px; right:12px; border-bottom: 2px solid #e0ba7b; border-right:2px solid #e0ba7b; }
+    .aside-body { position:relative; z-index:2; }
+    .tiny-label { text-align:center; font: 14px/1.4 'Forum',serif; letter-spacing:.09em; color:#eecb96; }
+    .folio-line { width:112px; height:1px; margin:12px auto 18px; background:linear-gradient(90deg,transparent,#e7bd7d 18%,#f2cf98 50%,#e7bd7d 82%,transparent); opacity:.95; }
+    .folio-line span { display:none; }
+    .aside h1 { margin:0; font:400 clamp(46px,4.4vw,65px)/1.08 'Ruslan Display',Georgia,serif;
+      letter-spacing:.01em; text-align:center; color:#f7e1b7; text-shadow:0 3px 18px #000e; }
+    .aside .subtitle { font:400 22px/1.25 'Forum',Georgia,serif; text-align:center;
+      color:#efd7af; margin:10px 0 13px; text-shadow:0 2px 8px #000b; }
+    .aside .description { font:20px/1.28 'Neucha','Forum',serif; text-align:center; color:#fff3df;
+      max-width:285px; margin:0 auto; text-shadow:0 2px 12px #000f; }
+    .portrait-frame { width:184px; height:206px; position:relative; margin:7px auto 12px;
+      border:4px double #e5bf7c; border-radius:93px 93px 7px 7px;
+      box-shadow:0 0 0 4px #172a37ba,0 0 0 5px #d8ae70aa, 0 12px 26px #0009;
+      overflow:hidden; background:#766757; }
+    .portrait-frame::after { content:'';position:absolute;inset:0;border:1px solid #fff5d36e;
+      border-radius:90px 90px 3px 3px;pointer-events:none; }
+    .portrait-frame img {display:block;width:100%;height:100%;object-fit:cover;object-position:50% 33%;}
+    .aside-art-spacer { flex:1; min-height:45px; }
+    .aside-copy { position:relative; z-index:2; padding: 0 10px 14px; }
+    .aside-copy .subtitle { margin:0 0 10px; }
+    .aside-copy .description { max-width:292px; font-size:18px; line-height:1.35; }
+    @media(max-height:720px) and (min-width:701px){
+      .aside{padding-top:23px;padding-bottom:15px;}
+      .folio-line{width:88px;margin:8px auto 12px;}
+      .portrait-frame{width:140px;height:150px;margin:4px auto 9px;}
+      .aside h1{font-size:46px;}
+      .aside .description{font-size:17px;}
+      .aside-art-spacer{min-height:10px;}
+      .aside-copy { padding-bottom: 10px; }
+    }
+    .aside-foot { position:relative; z-index:2; border-top:1px solid #a987566c; padding: 18px 7px 0;
+      text-align:center; color:#dcccb0; font:16px/1.35 'Forum',Georgia,serif; text-shadow:0 2px 8px #000b; }
+    .aside-foot a { display: inline-flex; color:#f3cd89; margin-top: 10px; font-weight:600; text-underline-offset:5px; }
+    .main { position:relative; display:flex; flex-direction:column; min-height:0; min-width:0;
+      background: repeating-linear-gradient(0deg,#4d321c04 0 1px,transparent 1px 5px),
+        radial-gradient(ellipse at 30% 10%,#fff9eb 0%,#f5ecd9 55%,#ebdcbf 100%); }
+    .main:before { content:''; position:absolute; top:0; bottom:0; left:8px; width:1px; background:#c4a575; opacity:.6; pointer-events:none; }
+    .topbar { z-index:1; display:flex; align-items:center; justify-content:space-between; gap:18px;
+      min-height:101px; padding: 17px 35px 14px; background:linear-gradient(180deg,#f9f1dbd9,#efe1c3ab);
+      border-bottom:3px double #c4a779; box-shadow:0 2px 8px #654d2a13; }
+    .top-main { display:flex; align-items:center; gap:17px; min-width:0; }
+    .crest { width:54px;height:54px;flex:none;border:1px solid #b99559;background:#253c48; color:#eccb8e;
+      display:grid;place-items:center; box-shadow:0 0 0 3px #e8d3a9,0 0 0 4px #bba070; }
+    .crest img { display:block;width:100%;height:100%;object-fit:cover;object-position:50% 35%; }
+    .heading { min-width:0; }
+    .heading .kicker { color:#88683e; letter-spacing:.07em; font-size:14px; font-family:'Forum',serif; font-weight:400; text-transform:uppercase; }
+    .top-title { font:400 30px/1.17 'Ruslan Display',Georgia,serif; color:#382c22; margin:4px 0 0; }
+    .top-sub { color:#735e49; font:15px/1.2 'Forum',Georgia,serif; margin-top:3px; }
+    .new { flex:none; padding:10px 15px; border:1px solid #ae895b; background:#f7edda;
+      color:#68432d; font:18px/1.3 'Neucha','Forum',serif; min-height:41px; }
+    .new:hover { background:#efe0bf; box-shadow:inset 0 0 0 1px #b78d52; }
+    .messages { flex:1; min-height:0; overflow-y:auto; overscroll-behavior:contain;
+      padding: 28px 38px 25px 39px; display:flex; flex-direction:column; gap:21px;
+      scrollbar-color:#bfa77e transparent; scrollbar-width:thin; }
+    .message { max-width:min(88%,640px); min-width:0; display:flex; flex-direction:column; gap:7px; }
+    .message.model { align-self:flex-start; }
+    .message.user { align-self:flex-end; }
+    .byline { font:400 16px/1.2 'Forum',Georgia,serif; color:#7d5939; letter-spacing:.06em;
+      text-transform:none; display:flex; align-items:center; gap:8px; padding:0 7px; }
+    .message.model .byline:before { content:'✦'; color:#ab804d; font-size:12px; }
+    .message.user .byline { justify-content:flex-end; color:#746353; }
+    .bubble { position:relative; padding:17px 22px; line-height:1.38; white-space:pre-wrap; overflow-wrap:anywhere;
+      font-family:'Marck Script','Neucha',cursive; font-size:21px;
+      background:linear-gradient(155deg,#fff9ec,#f7eedb); color:#2e2a25;
+      border:1px solid #c4ad81; box-shadow:0 2px 0 #bca1782f,0 9px 20px #83633d0e;
+      border-radius:3px 12px 12px 12px; }
+    .message.model .bubble:before { content:'';position:absolute;width:15px;height:15px;left:5px;top:5px;
+      border-top:1px solid #d2b787;border-left:1px solid #d2b787;pointer-events:none; }
+    .message.user .bubble { color:#fff4df; background:linear-gradient(135deg,#294454,#1d333f);
+      border-color:#9a8258; border-radius:12px 3px 12px 12px; box-shadow:3px 3px 0 #b69c7030; }
+    .message.pending .bubble { font-style:italic; color:#83715b; }
+    .error { margin: 0 28px 10px; padding:11px 15px; border:1px solid #b97863;
+      background:#fbebdf; color:#843c2f; font:17px/1.35 'Neucha',serif; }
+    .error[hidden] { display:none; }
+    .composer-wrap { z-index:1; padding:17px 32px max(18px,env(safe-area-inset-bottom));
+      background:linear-gradient(0deg,#eeddbb,#f7ebd1); border-top:3px double #c5ab7c; }
+    .composer { display:flex; align-items:flex-end; gap:10px; }
+    .composer textarea { flex:1; min-width:0; width:100%; max-height:152px; min-height:53px; resize:none;
+      background:#fffaf0; color:#332f29; border:1px solid #ad9069; border-radius:3px;
+      outline-offset:2px; padding:13px 15px; box-shadow:inset 0 1px 4px #83613718; }
+    .composer textarea::placeholder { color:#8c806f; }
+    .composer textarea { font:20px/1.2 'Marck Script','Neucha',cursive; }
+    .send { flex:none; width:53px;height:53px;display:grid;place-items:center; background:var(--russet);
+      color:#f5e9d2; border:1px solid #713429; border-radius:3px; box-shadow:inset 0 0 0 1px #a86651; }
+    .send svg { width:23px; height:23px; }
+    .send:hover { background:var(--russet-dark); }
+    .send:disabled,textarea:disabled,button:disabled { opacity:.55;cursor:not-allowed; }
+    .composer-note { font:15px/1.2 'Forum',serif; letter-spacing:.01em; text-align:right; color:#776958; margin-top:7px; }
+    .confirm-dialog { color:#332a22; background:#f5ead1; width:min(390px,calc(100% - 30px)); border:3px double #ae8859;
+      padding:25px 27px; box-shadow:0 24px 80px #0008; }
+    .confirm-dialog::backdrop { background:#12202c99; backdrop-filter:blur(3px); }
+    .dialog-ornament { text-align:center; color:#936935; font-size:24px; letter-spacing:.3em; }
+    .confirm-dialog h2 { font:400 26px/1.2 'Ruslan Display',Georgia,serif; text-align:center; margin:7px 0 8px; }
+    .confirm-dialog p { text-align:center; font:19px/1.35 'Neucha',serif; }
+    .dialog-actions { margin-top:22px; display:flex; justify-content:center; gap:12px; }
+    .dialog-actions button { min-width:116px; padding:10px 14px; border:1px solid #9f7c4e; }
+    .dialog-actions .cancel { background:#f9f1e0; color:#4a3929; }
+    .dialog-actions .yes { background:#6d352e; color:#fff0dc; }
+    @media(max-width:850px) { .page {grid-template-columns:295px minmax(0,1fr);} .aside{padding:25px 23px;} .topbar{padding-left:24px;padding-right:24px;} .messages{padding-left:26px;padding-right:26px;} .composer-wrap{padding-left:23px;padding-right:23px;} }
+    @media(max-width:700px) {
+      body { background:#e9ddc5; }
+      .page { width:100%;height:100dvh;min-height:0;grid-template-columns:minmax(0,1fr);margin:0;border:0;box-shadow:none; }
+      .aside {display:none;}
+      .main:before { display:none; }
+      .topbar { padding:12px 15px; min-height:88px; gap:12px; }
+      .crest { width:42px;height:42px;box-shadow:0 0 0 2px #e8d3a9,0 0 0 3px #bba070; }
 
-    .scroll-container {
-      max-width: 960px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background-image: url('./slavic_frame_border.png');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-      border-radius: 12px;
+      .top-main { gap:11px; }
+      .heading .kicker{font-size:12px;letter-spacing:.02em;}
+      .top-title { font-size:25px; }
+      .top-sub { font-size:13px; }
+      .new {font-size:16px;min-height:39px;padding:8px 10px;}
+      .messages { padding:20px 14px 22px; gap:17px; }
+      .message {max-width:92%;}
+      .bubble { padding:14px 15px; font-size:19px; }
+      .composer-wrap {padding:12px 12px max(12px,env(safe-area-inset-bottom));}
+      .composer-note {font-size:12px;}
+      .send {width:48px;height:48px;}
+      .composer textarea {min-height:48px;}
     }
-
-    h1 {
-      text-align: center;
-      font-size: 2rem;
-      margin-bottom: 1rem;
-    }
-
-    iframe {
-      width: 100%;
-      height: 70vh;
-      border: none;
-      border-radius: 8px;
-    }
-
-    .back-button {
-      text-align: center;
-      margin-top: 1.5rem;
-    }
-
-    .back-button a {
-      background: #c9a66b;
-      color: #3b240c;
-      padding: 0.6rem 1.6rem;
-      border-radius: 6px;
-      text-decoration: none;
-      font-size: 1rem;
-      font-weight: bold;
-      box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-    }
-
-    .back-button a:hover {
-      background: #b9924f;
-    }
+    @media(max-width:370px){ .top-title {font-size:22px;} .top-sub {display:none;} .new{font-size:14px;} .crest{width:37px;height:37px;} }
+    @media(prefers-reduced-motion:no-preference){ .bubble{animation:rise .21s ease-out;} @keyframes rise{from{opacity:.5;transform:translateY(5px)}to{opacity:1;transform:none}} }
   </style>
 </head>
-
 <body>
-  <div class="scroll-container">
-    <h1>ꙗꙁь чьтєсѧ сѣй свитокъ, гдѣ глаголеть Олѣшка, княжичъ из Поднѣбєсьѧ</h1>
-
-    <iframe src="https://www.chatbase.co/chatbot-iframe/mo2XekPy05IvkEh4imI09"></iframe>
-
-    <div class="back-button">
-      <a href="https://vk.com/kniazhich" target="_blank">← Назад в Поднебесье</a>
-    </div>
+  <div class="page">
+    <aside class="aside" aria-label="О персонаже">
+      <span class="faint-frame" aria-hidden="true"></span>
+            <div class="aside-body">
+        <div class="tiny-label">ПОДНЕБЕСЬЕ · АКАДЕМИЯ СВЕТОЗАРА</div>
+        <div class="folio-line" aria-hidden="true"><span>✧</span></div>
+        <div class="portrait-frame"><img src="./OLESHKA3.jpg" alt="Олешка, портрет из авторского референса OLESHKA3" width="184" height="206" loading="eager"></div>
+        <h1>Олешка</h1>
+      </div>
+      <div class="aside-art-spacer" aria-hidden="true"></div>
+      <div class="aside-copy">
+        <p class="subtitle">Княжич из Академии</p>
+        <p class="description">Здрав будь! Заходи, поболтаем. Хочешь — про Академию расскажу, хочешь — про наши приключения. А можешь и про себя что-нибудь рассказать!</p>
+      </div>
+      <div class="aside-foot">Разговор сохраняется только в этом браузере.<br><a href="https://vk.com/kniazhich" target="_blank" rel="noopener noreferrer">Вернуться в Поднебесье ↗</a></div>
+    </aside>
+    <section class="main" aria-label="Переписка с Олешкой">
+      <header class="topbar">
+        <div class="top-main">
+          <div class="crest" aria-hidden="true"><img src="./OLESHKA3.jpg" alt="" width="54" height="54"></div>
+          <div class="heading"><div class="kicker">Разговор с Поднебесьем</div><div class="top-title">Олешка</div><div class="top-sub">Княжич · Академия Светозара</div></div>
+        </div>
+        <button class="new" id="new-chat" type="button" title="Начать новый разговор">↺ Новый разговор</button>
+      </header>
+      <main class="messages" id="messages" role="log" aria-live="polite" aria-relevant="additions text"></main>
+      <div class="error" id="error" role="alert" hidden></div>
+      <div class="composer-wrap">
+        <form class="composer" id="composer">
+          <textarea id="input" name="message" maxlength="4000" rows="1" aria-label="Сообщение Олешке" placeholder="Напиши Олешке…" required></textarea>
+          <button type="submit" class="send" id="send" aria-label="Отправить сообщение" title="Отправить"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12 20 4l-6 16-3.5-6.5L4 12Z"/><path d="m10.5 13.5 9.5-9.5"/></svg></button>
+        </form>
+        <div class="composer-note">Enter — отправить · Shift+Enter — новая строка</div>
+      </div>
+    </section>
   </div>
+  <dialog id="new-dialog" class="confirm-dialog" aria-labelledby="dialog-title" aria-describedby="dialog-desc">
+    <form method="dialog">
+      <div class="dialog-ornament" aria-hidden="true">✦ ✧ ✦</div>
+      <h2 id="dialog-title">Начать заново?</h2>
+      <p id="dialog-desc">Прежняя переписка в этом браузере будет удалена. Начать новый разговор с Олешкой?</p>
+      <div class="dialog-actions"><button class="cancel" value="cancel" type="submit">Отмена</button><button class="yes" id="confirm-new" value="confirm" type="submit">Новый разговор</button></div>
+    </form>
+  </dialog>
+  <script>
+  (() => {
+    'use strict';
+    const API = 'https://oleshka-chat-api.boysinger2008.workers.dev/api/chat';
+    const STORAGE_KEY = 'oleshka-native-chat-v1';
+    const MAX_SAVED = 80;
+    const MAX_CONTEXT = 12;
+    const greeting = 'О, привет! Здорово, что заглянул! Как дела?';
+    const container = document.getElementById('messages');
+    const form = document.getElementById('composer');
+    const input = document.getElementById('input');
+    const send = document.getElementById('send');
+    const errorBox = document.getElementById('error');
+    const newButton = document.getElementById('new-chat');
+    const newDialog = document.getElementById('new-dialog');
+    const confirmNew = document.getElementById('confirm-new');
+    let busy = false;
+    let focusDate = '';
+    let conversation = [];
+
+    function loadSaved() {
+      try {
+        const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        if (Array.isArray(data.messages)) {
+          conversation = data.messages.filter(m => m && (m.role === 'user' || m.role === 'model') && typeof m.text === 'string').slice(-MAX_SAVED);
+        }
+        if (typeof data.focusDate === 'string') focusDate = data.focusDate;
+      } catch (_) { conversation = []; focusDate = ''; }
+    }
+    function save() {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ messages: conversation.slice(-MAX_SAVED), focusDate })); }
+      catch (_) { /* Private mode and storage limits: chat remains usable. */ }
+    }
+    function showError(message) { errorBox.textContent = message; errorBox.hidden = !message; }
+    function bubble(role, text, pending = false) {
+      const wrap = document.createElement('div');
+      wrap.className = 'message ' + role + (pending ? ' pending' : '');
+      const name = document.createElement('div');
+      name.className = 'byline';
+      name.textContent = role === 'user' ? 'Ты' : 'Олешка';
+      const body = document.createElement('div');
+      body.className = 'bubble';
+      body.textContent = text; // Never insert model text as HTML.
+      wrap.append(name, body);
+      container.appendChild(wrap);
+      container.scrollTop = container.scrollHeight;
+      return wrap;
+    }
+    function render() {
+      container.replaceChildren();
+      if (!conversation.length) bubble('model', greeting);
+      else for (const msg of conversation) bubble(msg.role, msg.text);
+    }
+    function resize() {
+      input.style.height = 'auto';
+      input.style.height = Math.min(Math.max(input.scrollHeight, 50), 152) + 'px';
+    }
+    function setBusy(value) { busy = value; send.disabled = value; input.disabled = value; newButton.disabled = value; }
+
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      const question = input.value.trim();
+      if (!question || busy) return;
+      showError('');
+      const previous = conversation.slice(-MAX_CONTEXT);
+      const userNode = bubble('user', question);
+      const pending = bubble('model', 'Пишет…', true);
+      input.value = '';
+      resize();
+      setBusy(true);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 75000);
+      try {
+        const response = await fetch(API, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: controller.signal,
+          body: JSON.stringify({ message: question, history: previous, focusDate })
+        });
+        const data = await response.json();
+        if (!response.ok || typeof data.reply !== 'string' || !data.reply.trim()) {
+          throw new Error(response.status === 429 ? 'Лимит разговоров временно исчерпан. Попробуй позже.' :
+            'Не получилось отправить сообщение. Попробуй ещё раз.');
+        }
+        pending.remove();
+        bubble('model', data.reply);
+        conversation.push({role: 'user', text: question}, {role: 'model', text: data.reply});
+        conversation = conversation.slice(-MAX_SAVED);
+        focusDate = typeof data.knowledge?.focusDate === 'string' ? data.knowledge.focusDate : '';
+        save();
+      } catch (error) {
+        pending.remove();
+        userNode.remove();
+        input.value = question;
+        resize();
+        showError(error.name === 'AbortError' ? 'Ответ слишком долго не приходит. Попробуй ещё раз.' :
+          (error instanceof TypeError ? 'Нет соединения с сервером. Проверь интернет и попробуй снова.' : error.message));
+      } finally {
+        clearTimeout(timeoutId);
+        setBusy(false);
+        input.focus();
+      }
+    });
+    input.addEventListener('keydown', event => {
+      if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) {
+        event.preventDefault();
+        form.requestSubmit();
+      }
+    });
+    input.addEventListener('input', resize);
+    function clearConversation() {
+      conversation = [];
+      focusDate = '';
+      try { localStorage.removeItem(STORAGE_KEY); } catch (_) { /* no storage access */ }
+      showError('');
+      render();
+      input.focus();
+    }
+    newButton.addEventListener('click', () => {
+      if (busy) return;
+      if (!conversation.length) { clearConversation(); return; }
+      newDialog.showModal();
+    });
+    confirmNew.addEventListener('click', clearConversation);
+    loadSaved(); render(); resize();
+  })();
+  </script>
 </body>
 </html>
