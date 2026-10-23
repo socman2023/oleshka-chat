@@ -3,6 +3,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- VK Mini Apps: signal the host that the embedded page is ready. -->
+  <script src="https://unpkg.com/@vkontakte/vk-bridge@2/dist/browser.min.js"></script>
+  <script>
+    (function () {
+      if (!window.vkBridge || typeof window.vkBridge.send !== 'function') {
+        console.warn('VK Bridge did not load; standalone web chat remains available.');
+        return;
+      }
+      window.vkBridge.send('VKWebAppInit').catch(function (error) {
+        // Outside VK this can be unsupported, but the standalone chat must still load.
+        console.info('VK Mini App initialization not acknowledged:', error);
+      });
+    })();
+  </script>
   <meta name="theme-color" content="#1d2c38">
   <meta name="description" content="Разговор с княжичем Олешкой из Поднебесья.">
   <title>Олешка — разговор из Академии</title>
