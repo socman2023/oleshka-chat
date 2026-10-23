@@ -3,128 +3,230 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#eee1c8">
-  <meta name="description" content="Поговори с княжичем Олешкой из мира Поднебесья.">
-  <title>Олешка — разговор с княжичем</title>
+  <meta name="theme-color" content="#1d2c38">
+  <meta name="description" content="Разговор с княжичем Олешкой из Поднебесья.">
+  <title>Олешка — разговор из Академии</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Forum&family=PT+Serif:wght@400;700&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       color-scheme: light;
-      --ink: #382c23;
-      --muted: #746559;
-      --parchment: #fbf6e9;
-      --surface: #fffdf7;
-      --gold: #a67b41;
-      --line: #decbaa;
-      --wine: #744638;
-      --wine-dark: #5a322a;
-      --shadow: 0 16px 58px rgba(62, 39, 24, .13);
+      --ink: #2d2d2a;
+      --muted: #756c60;
+      --paper: #f3ebd8;
+      --paper-light: #faf5e7;
+      --old-paper: #e6d8b9;
+      --line: #bca378;
+      --gold: #d2ae6b;
+      --copper: #b6884c;
+      --blue: #1c303e;
+      --blue-dark: #11232e;
+      --russet: #823f33;
+      --russet-dark: #602b26;
     }
-    * { box-sizing: border-box; }
-    html, body { margin: 0; min-height: 100%; }
-    body {
-      font: 16px/1.48 system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
-      color: var(--ink);
-      background: radial-gradient(circle at 5% 0, #fdf7e9 0, transparent 32%),
-        radial-gradient(circle at 95% 90%, #ead3ae 0, transparent 42%), #eee1c8;
-    }
-    button, textarea { font: inherit; }
+    *, *::before, *::after { box-sizing: border-box; }
+    html,body { min-height: 100%; margin: 0; }
+    body { font: 16px/1.5 'Golos Text', system-ui, sans-serif; color: var(--ink);
+      background: radial-gradient(ellipse at 50% 0%,#d7c4a5 0%,transparent 48%),
+        linear-gradient(135deg,#1a2832,#3a3b32 45%,#1b2b35); }
+    button,textarea { font: inherit; }
     button { cursor: pointer; }
-    button:focus-visible, textarea:focus-visible, a:focus-visible { outline: 3px solid #bb8c4c; outline-offset: 3px; }
-    .page { width: min(1120px, 100% - 32px); height: min(880px, calc(100dvh - 36px)); min-height: 540px; display: grid;
-      grid-template-columns: 305px minmax(0, 1fr); margin: 18px auto; background: var(--surface);
-      border: 1px solid #c9ac7d; border-radius: 18px; overflow: hidden; box-shadow: var(--shadow); }
-    .aside { background: #f1e4cc; border-right: 1px solid var(--line); display: flex; flex-direction: column;
-      position: relative; padding: 30px 25px 23px; }
-    .aside::before { content: ""; position: absolute; inset: 10px; pointer-events: none; border: 1px solid rgba(166,123,65,.25); border-radius: 12px; }
-    .brand-icon { width: 78px; height: 78px; border: 2px solid #b89255; border-radius: 50%; display: grid;
-      place-items: center; margin: 12px 0 24px; font: bold 50px Georgia, "Times New Roman", serif;
-      background: #fff7e3; box-shadow: 0 0 0 6px #f7ead5; color: var(--wine); }
-    .eyebrow { text-transform: uppercase; letter-spacing: .18em; color: #8d714e; font-size: 10px; font-weight: 800; }
-    .aside h1 { font: 700 44px/1.1 Georgia, "Times New Roman", serif; margin: 7px 0 12px; color: var(--wine-dark); }
-    .aside p { font-size: 14px; line-height: 1.65; margin: 0 0 22px; max-width: 220px; }
-    .ornament { font: 24px Georgia, serif; color: #ad8451; letter-spacing: .35em; margin: 1px 0 20px; }
-    .aside-foot { margin-top: auto; position: relative; font-size: 12px; color: #6e5946; line-height: 1.6; }
-    .aside-foot a { color: #684435; text-underline-offset: 3px; }
-    .main { min-width: 0; min-height: 0; display: flex; flex-direction: column; background: var(--surface); }
-    .topbar { padding: 20px 24px; border-bottom: 1px solid var(--line); display: flex; align-items: center;
-      gap: 12px; justify-content: space-between; background: #fffcf5; }
-    .top-title { font: 700 21px/1.2 Georgia, "Times New Roman", serif; }
-    .top-sub { font-size: 12px; margin-top: 4px; color: var(--muted); }
-    .new { white-space: nowrap; border-radius: 99px; padding: 10px 13px; background: transparent;
-      border: 1px solid #ccb48f; font-size: 13px; color: #65483a; font-weight: 650; }
-    .new:hover { background: #f7ecd8; }
-    .messages { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 27px 28px 28px;
-      display: flex; flex-direction: column; gap: 17px; background:
-      linear-gradient(rgba(255,253,247,.94), rgba(255,253,247,.94)), url("./slavic_frame_border.png") center/cover no-repeat; }
-    .message { max-width: min(86%, 640px); min-width: 0; display: flex; flex-direction: column; gap: 5px; }
-    .message.model { align-self: flex-start; }
-    .message.user { align-self: flex-end; }
-    .byline { font-size: 11px; font-weight: 700; color: #94744d; letter-spacing: .04em; padding: 0 8px; }
-    .message.user .byline { text-align: right; color: #8a756b; }
-    .bubble { padding: 13px 17px; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.65;
-      background: #f8eedb; border: 1px solid #e4d2b1; border-radius: 15px 15px 15px 4px; }
-    .message.user .bubble { color: #fffaf0; background: var(--wine); border-color: var(--wine);
-      border-radius: 15px 15px 4px 15px; }
-    .message.pending .bubble { font-style: italic; color: #8c7868; }
-    .error { border: 1px solid #d6ae9c; border-radius: 10px; background: #fff3ed; color: #763b29;
-      padding: 10px 14px; font-size: 13px; margin: 0 24px 12px; }
-    .error[hidden] { display: none; }
-    .composer-wrap { padding: 13px 20px max(17px, env(safe-area-inset-bottom)); background: #fffcf5;
-      border-top: 1px solid var(--line); }
-    .composer { display: flex; gap: 10px; align-items: flex-end; }
-    .composer textarea { flex: 1; min-width: 0; width: 100%; max-height: 152px; min-height: 50px; resize: none;
-      padding: 12px 14px; border: 1px solid #cdb995; background: #fff; border-radius: 12px;
-      outline-offset: 2px; color: var(--ink); }
-    .composer textarea::placeholder { color: #9a8b7c; }
-    .send { display: flex; justify-content: center; align-items: center; width: 50px; height: 50px;
-      border: 0; border-radius: 12px; color: #fff; background: var(--wine); font-size: 22px; }
-    .send:hover { background: var(--wine-dark); }
-    .send:disabled, textarea:disabled { opacity: .55; cursor: not-allowed; }
-    .composer-note { font-size: 11px; color: #857366; margin-top: 7px; text-align: right; }
-    @media (max-width: 750px) {
-      body { background: var(--surface); }
-      .page { width: 100%; height: 100dvh; min-height: 0; margin: 0; grid-template-columns: minmax(0,1fr); border: 0; border-radius: 0; box-shadow: none; }
-      .aside { display: none; }
-      .topbar { padding: 13px 15px; }
-      .top-title { font-size: 20px; }
-      .messages { padding: 18px 13px 24px; gap: 16px; }
-      .message { max-width: 91%; }
-      .bubble { padding: 11px 13px; }
-      .composer-wrap { padding: 11px 11px max(12px, env(safe-area-inset-bottom)); }
-      .composer-note { font-size: 10px; }
-      .new { font-size: 12px; padding: 9px 11px; }
+    button:focus-visible,textarea:focus-visible,a:focus-visible { outline: 3px solid #d1a057; outline-offset: 3px; }
+    .page { width: min(1200px,calc(100% - 40px)); height: min(900px,calc(100dvh - 44px)); min-height: 550px;
+      display: grid; grid-template-columns: 353px minmax(0,1fr); margin: 22px auto;
+      background: var(--paper); border: 1px solid #bc9a5b;
+      box-shadow: 0 30px 95px #0007, 0 0 0 5px #1e2b31, 0 0 0 6px #957a50;
+      overflow: hidden; }
+    /* A dark illuminated-manuscript cover; the fortress is an atmospheric motif, not a canonical drawing. */
+    .aside { min-width: 0; position: relative; overflow: hidden; display: flex; flex-direction: column;
+      padding: 28px 27px 24px; color: #f4e2bb;
+      background: radial-gradient(ellipse at 18% 0, #345062 0, transparent 55%),
+        repeating-linear-gradient(103deg, #ffffff04 0 1px, transparent 1px 17px),
+        linear-gradient(155deg,#24394a 0%,#182a38 50%,#10222f 100%);
+      border-right: 4px double #c09a60; }
+    .aside::before { content:''; pointer-events:none; position:absolute; inset: 12px;
+      border: 1px solid #a9854d83; }
+    .aside::after { content:''; pointer-events:none; position:absolute; inset: 18px;
+      border: 1px solid #ad8c5333; }
+    .corner { position:absolute; width:40px; height:40px; z-index:1; pointer-events:none; }
+    .corner.tl { top:12px; left:12px; border-top: 2px solid #d1a35c; border-left:2px solid #d1a35c; }
+    .corner.tr { top:12px; right:12px; border-top: 2px solid #d1a35c; border-right:2px solid #d1a35c; }
+    .corner.bl { bottom:12px; left:12px; border-bottom: 2px solid #d1a35c; border-left:2px solid #d1a35c; }
+    .corner.br { bottom:12px; right:12px; border-bottom: 2px solid #d1a35c; border-right:2px solid #d1a35c; }
+    .aside-body { position:relative; z-index:2; }
+    .tiny-label { text-align:center; font-size:10px; font-weight:700; letter-spacing:.23em; color:#d7b67c; }
+    .folio-line { display:flex; align-items:center; gap:10px; justify-content:center; margin: 14px 0 19px; color:#caa365; }
+    .folio-line:before, .folio-line:after { content:''; height:1px; width:70px; background:linear-gradient(90deg,transparent,#be955a); }
+    .folio-line:after { transform:rotate(180deg); }
+    .folio-line span { font-family: Georgia, serif; font-size: 19px; }
+    .aside h1 { margin: 0; font: 400 clamp(60px,6vw,84px)/.99 'Forum',Georgia,serif; letter-spacing: .01em;
+      text-align: center; color:#fbe8c3; text-shadow:0 2px 17px #0007; }
+    .aside .subtitle { font:400 19px/1.25 'Forum',Georgia,serif; text-align:center;
+      color:#dab77f; margin: 12px 0 13px; }
+    .aside .description { font: 13px/1.8 'Golos Text',sans-serif; text-align:center; color:#e7decb; max-width:270px;
+      margin: 0 auto; }
+    .mountain-art { display:block; width:calc(100% + 54px); margin: 16px -27px 0;
+      height: min(295px,38vh); min-height:195px; flex-shrink: 0; filter:drop-shadow(0 5px 10px #0006); }
+    .aside-foot { position:relative; z-index:2; margin-top:auto; border-top:1px solid #a987566c; padding: 18px 7px 0;
+      text-align:center; color:#dcccb0; font-size:12px; line-height:1.55; }
+    .aside-foot a { display: inline-flex; color:#f3cd89; margin-top: 10px; font-weight:600; text-underline-offset:5px; }
+    .main { position:relative; display:flex; flex-direction:column; min-height:0; min-width:0;
+      background: repeating-linear-gradient(0deg,#4d321c04 0 1px,transparent 1px 5px),
+        radial-gradient(ellipse at 30% 10%,#fff9eb 0%,#f5ecd9 55%,#ebdcbf 100%); }
+    .main:before { content:''; position:absolute; top:0; bottom:0; left:8px; width:1px; background:#c4a575; opacity:.6; pointer-events:none; }
+    .topbar { z-index:1; display:flex; align-items:center; justify-content:space-between; gap:18px;
+      min-height:101px; padding: 17px 35px 14px; background:linear-gradient(180deg,#f9f1dbd9,#efe1c3ab);
+      border-bottom:3px double #c4a779; box-shadow:0 2px 8px #654d2a13; }
+    .top-main { display:flex; align-items:center; gap:17px; min-width:0; }
+    .crest { width:54px;height:54px;flex:none;border:1px solid #b99559;background:#253c48; color:#eccb8e;
+      display:grid;place-items:center; box-shadow:0 0 0 3px #e8d3a9,0 0 0 4px #bba070; }
+    .crest svg { width:33px;height:33px; }
+    .heading { min-width:0; }
+    .heading .kicker { color:#88683e; letter-spacing:.16em; font-size:10px; font-weight:700; text-transform:uppercase; }
+    .top-title { font:400 30px/1.07 'Forum',Georgia,serif; color:#382c22; margin:4px 0 0; }
+    .top-sub { color:#735e49; font-size:11px; margin-top:3px; }
+    .new { flex:none; padding:10px 15px; border:1px solid #ae895b; background:#f7edda;
+      color:#68432d; font-size:12px; font-weight:700; min-height:41px; }
+    .new:hover { background:#efe0bf; box-shadow:inset 0 0 0 1px #b78d52; }
+    .messages { flex:1; min-height:0; overflow-y:auto; overscroll-behavior:contain;
+      padding: 28px 38px 25px 39px; display:flex; flex-direction:column; gap:21px;
+      scrollbar-color:#bfa77e transparent; scrollbar-width:thin; }
+    .message { max-width:min(88%,640px); min-width:0; display:flex; flex-direction:column; gap:7px; }
+    .message.model { align-self:flex-start; }
+    .message.user { align-self:flex-end; }
+    .byline { font:700 11px/1.3 'Golos Text',sans-serif; color:#7d5939; letter-spacing:.10em;
+      text-transform:uppercase; display:flex; align-items:center; gap:8px; padding:0 7px; }
+    .message.model .byline:before { content:'✦'; color:#ab804d; font-size:12px; }
+    .message.user .byline { justify-content:flex-end; color:#746353; }
+    .bubble { position:relative; padding:17px 22px; line-height:1.65; white-space:pre-wrap; overflow-wrap:anywhere;
+      font-family: 'PT Serif',Georgia,serif; font-size:15px;
+      background:linear-gradient(155deg,#fff9ec,#f7eedb); color:#2e2a25;
+      border:1px solid #c4ad81; box-shadow:0 2px 0 #bca1782f,0 9px 20px #83633d0e;
+      border-radius:3px 12px 12px 12px; }
+    .message.model .bubble:before { content:'';position:absolute;width:15px;height:15px;left:5px;top:5px;
+      border-top:1px solid #d2b787;border-left:1px solid #d2b787;pointer-events:none; }
+    .message.user .bubble { color:#fff4df; background:linear-gradient(135deg,#294454,#1d333f);
+      border-color:#9a8258; border-radius:12px 3px 12px 12px; box-shadow:3px 3px 0 #b69c7030; }
+    .message.pending .bubble { font-style:italic; color:#83715b; }
+    .error { margin: 0 28px 10px; padding:11px 15px; border:1px solid #b97863;
+      background:#fbebdf; color:#843c2f; font-size:13px; }
+    .error[hidden] { display:none; }
+    .composer-wrap { z-index:1; padding:17px 32px max(18px,env(safe-area-inset-bottom));
+      background:linear-gradient(0deg,#eeddbb,#f7ebd1); border-top:3px double #c5ab7c; }
+    .composer { display:flex; align-items:flex-end; gap:10px; }
+    .composer textarea { flex:1; min-width:0; width:100%; max-height:152px; min-height:53px; resize:none;
+      background:#fffaf0; color:#332f29; border:1px solid #ad9069; border-radius:3px;
+      outline-offset:2px; padding:13px 15px; box-shadow:inset 0 1px 4px #83613718; }
+    .composer textarea::placeholder { color:#8c806f; }
+    .send { flex:none; width:53px;height:53px;display:grid;place-items:center; background:var(--russet);
+      color:#f5e9d2; border:1px solid #713429; border-radius:3px; box-shadow:inset 0 0 0 1px #a86651; }
+    .send svg { width:23px; height:23px; }
+    .send:hover { background:var(--russet-dark); }
+    .send:disabled,textarea:disabled,button:disabled { opacity:.55;cursor:not-allowed; }
+    .composer-note { font-size:10px; letter-spacing:.01em; text-align:right; color:#776958; margin-top:7px; }
+    .confirm-dialog { color:#332a22; background:#f5ead1; width:min(390px,calc(100% - 30px)); border:3px double #ae8859;
+      padding:25px 27px; box-shadow:0 24px 80px #0008; }
+    .confirm-dialog::backdrop { background:#12202c99; backdrop-filter:blur(3px); }
+    .dialog-ornament { text-align:center; color:#936935; font-size:24px; letter-spacing:.3em; }
+    .confirm-dialog h2 { font:400 32px/1.2 'Forum',Georgia,serif; text-align:center; margin:7px 0 8px; }
+    .confirm-dialog p { text-align:center; line-height:1.55; font-size:13px; }
+    .dialog-actions { margin-top:22px; display:flex; justify-content:center; gap:12px; }
+    .dialog-actions button { min-width:116px; padding:10px 14px; border:1px solid #9f7c4e; }
+    .dialog-actions .cancel { background:#f9f1e0; color:#4a3929; }
+    .dialog-actions .yes { background:#6d352e; color:#fff0dc; }
+    @media(max-width:850px) { .page {grid-template-columns:295px minmax(0,1fr);} .aside{padding:25px 23px;} .mountain-art{width:calc(100% + 46px); margin-left:-23px;margin-right:-23px;} .topbar{padding-left:24px;padding-right:24px;} .messages{padding-left:26px;padding-right:26px;} .composer-wrap{padding-left:23px;padding-right:23px;} }
+    @media(max-width:700px) {
+      body { background:#e9ddc5; }
+      .page { width:100%;height:100dvh;min-height:0;grid-template-columns:minmax(0,1fr);margin:0;border:0;box-shadow:none; }
+      .aside {display:none;}
+      .main:before { display:none; }
+      .topbar { padding:12px 15px; min-height:88px; gap:12px; }
+      .crest { width:42px;height:42px;box-shadow:0 0 0 2px #e8d3a9,0 0 0 3px #bba070; }
+      .crest svg {width:26px;height:26px;}
+      .top-main { gap:11px; }
+      .heading .kicker{font-size:9px;letter-spacing:.1em;}
+      .top-title { font-size:26px; }
+      .top-sub { font-size:10px; }
+      .new {font-size:11px;min-height:39px;padding:8px 10px;}
+      .messages { padding:20px 14px 22px; gap:17px; }
+      .message {max-width:92%;}
+      .bubble { padding:14px 15px; font-size:14px; }
+      .composer-wrap {padding:12px 12px max(12px,env(safe-area-inset-bottom));}
+      .composer-note {font-size:10px;}
+      .send {width:48px;height:48px;}
+      .composer textarea {min-height:48px;}
     }
-    @media (prefers-reduced-motion: no-preference) { .bubble { animation: appear .22s ease-out; }
-      @keyframes appear { from { opacity: .6; transform: translateY(4px); } to { opacity: 1; transform: none; } } }
+    @media(max-width:370px){ .top-title {font-size:22px;} .top-sub {display:none;} .new{font-size:10px;} .crest{width:37px;height:37px;} }
+    @media(prefers-reduced-motion:no-preference){ .bubble{animation:rise .21s ease-out;} @keyframes rise{from{opacity:.5;transform:translateY(5px)}to{opacity:1;transform:none}} }
   </style>
 </head>
 <body>
   <div class="page">
     <aside class="aside" aria-label="О персонаже">
-      <div class="brand-icon" aria-hidden="true">О</div>
-      <div class="eyebrow">Поднебесье · Академия</div>
-      <h1>Олешка</h1>
-      <p>Княжич, ученик Академии Светозара. Можно просто поболтать или расспросить о друзьях и приключениях.</p>
-      <div class="ornament" aria-hidden="true">✦ ❦ ✦</div>
-      <div class="aside-foot">Разговор остаётся в этом браузере и не переносится между устройствами.<br>
-        <a href="https://vk.com/kniazhich" target="_blank" rel="noopener noreferrer">Вернуться в Поднебесье ↗</a></div>
+      <span class="corner tl" aria-hidden="true"></span><span class="corner tr" aria-hidden="true"></span><span class="corner bl" aria-hidden="true"></span><span class="corner br" aria-hidden="true"></span>
+      <div class="aside-body">
+        <div class="tiny-label">ПОДНЕБЕСЬЕ · АКАДЕМИЯ СВЕТОЗАРА</div>
+        <div class="folio-line" aria-hidden="true"><span>✧</span></div>
+        <h1>Олешка</h1>
+        <p class="subtitle">Княжич из Академии</p>
+        <p class="description">Здесь можно поговорить с Олешкой — о том, что случилось сегодня, о друзьях, учёбе и приключениях.</p>
+      </div>
+      <svg class="mountain-art" viewBox="0 0 360 300" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="mount-far" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#536678"/><stop offset="1" stop-color="#253e4c"/></linearGradient>
+          <linearGradient id="mount-near" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#314654"/><stop offset="1" stop-color="#122836"/></linearGradient>
+          <radialGradient id="mist"><stop stop-color="#dec59d" stop-opacity=".36"/><stop offset="1" stop-color="#e2c99d" stop-opacity="0"/></radialGradient>
+        </defs>
+        <ellipse cx="177" cy="105" rx="150" ry="83" fill="url(#mist)"/>
+        <circle cx="169" cy="89" r="40" fill="#d8b578" opacity=".83"/>
+        <circle cx="169" cy="89" r="49" stroke="#e7ce99" stroke-opacity=".4" fill="none" stroke-width="1"/>
+        <path d="M0 211 L36 175 65 190 106 134 142 183 170 157 215 207 252 148 298 199 334 167 360 190V300H0Z" fill="url(#mount-far)"/>
+        <path d="M0 236 L61 193 92 208 126 161 161 202 213 173 265 229 304 184 360 219V300H0Z" fill="url(#mount-near)"/>
+        <path d="M0 273 L30 258 72 255 112 240 143 247 171 212 202 214 226 235 262 258 293 248 329 259 360 251V300H0Z" fill="#112632"/>
+        <!-- A schematic fortress on a rocky Academy mountain, not a claimed precise canon illustration. -->
+        <path d="M114 231 L137 204 152 195 165 176 200 175 208 197 231 209 244 240Z" fill="#101f2b"/>
+        <path d="M133 206 V179 H140 V167 H146 V179 H153 V198 H163 V173 H169 V161 H177 V173 H184 V196 H194 V181 H199 V171 H205 V181 H211 V207Z" fill="#152833" stroke="#c29d63" stroke-width=".7"/>
+        <path d="M166 167 V136 H170 V129 H179 V136 H184 V167 Z" fill="#172a37" stroke="#c29d63" stroke-width=".7"/>
+        <path d="M173 146v-7h4v7z M140 190v-7h4v7z M198 193v-7h4v7z" fill="#f4cd88" opacity=".83"/>
+        <path d="M16 271 Q84 252 155 263 T360 270" fill="none" stroke="#bc9863" stroke-opacity=".35"/>
+        <path d="M20 286 Q105 264 190 280 T350 286" fill="none" stroke="#bc9863" stroke-opacity=".2"/>
+      </svg>
+      <div class="aside-foot">Разговор сохраняется только в этом браузере.<br><a href="https://vk.com/kniazhich" target="_blank" rel="noopener noreferrer">Вернуться в Поднебесье ↗</a></div>
     </aside>
     <section class="main" aria-label="Переписка с Олешкой">
       <header class="topbar">
-        <div><div class="top-title">Разговор с Олешкой</div><div class="top-sub">Княжич из Академии Светозара</div></div>
-        <button class="new" id="new-chat" type="button" title="Начать новый разговор">↻ Новый разговор</button>
+        <div class="top-main">
+          <div class="crest" aria-hidden="true">
+            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 28C11 15 15 9 29 7C27 21 21 27 12 28Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              <path d="M10 34C14 21 20 17 29 7M13 24L9 18M18 18L16 12M19 19L27 20" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              <path d="M8 33H32" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <div class="heading"><div class="kicker">Разговор из Поднебесья</div><div class="top-title">Олешка</div><div class="top-sub">Княжич · Академия Светозара</div></div>
+        </div>
+        <button class="new" id="new-chat" type="button" title="Начать новый разговор">↺ Новый разговор</button>
       </header>
       <main class="messages" id="messages" role="log" aria-live="polite" aria-relevant="additions text"></main>
       <div class="error" id="error" role="alert" hidden></div>
       <div class="composer-wrap">
         <form class="composer" id="composer">
           <textarea id="input" name="message" maxlength="4000" rows="1" aria-label="Сообщение Олешке" placeholder="Напиши Олешке…" required></textarea>
-          <button type="submit" class="send" id="send" aria-label="Отправить сообщение">↑</button>
+          <button type="submit" class="send" id="send" aria-label="Отправить сообщение" title="Отправить"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12 20 4l-6 16-3.5-6.5L4 12Z"/><path d="m10.5 13.5 9.5-9.5"/></svg></button>
         </form>
         <div class="composer-note">Enter — отправить · Shift+Enter — новая строка</div>
       </div>
     </section>
   </div>
+  <dialog id="new-dialog" class="confirm-dialog" aria-labelledby="dialog-title" aria-describedby="dialog-desc">
+    <form method="dialog">
+      <div class="dialog-ornament" aria-hidden="true">✦ ✧ ✦</div>
+      <h2 id="dialog-title">Начать заново?</h2>
+      <p id="dialog-desc">Прежняя переписка в этом браузере будет удалена. Начать новый разговор с Олешкой?</p>
+      <div class="dialog-actions"><button class="cancel" value="cancel" type="submit">Отмена</button><button class="yes" id="confirm-new" value="confirm" type="submit">Новый разговор</button></div>
+    </form>
+  </dialog>
   <script>
   (() => {
     'use strict';
@@ -139,6 +241,8 @@
     const send = document.getElementById('send');
     const errorBox = document.getElementById('error');
     const newButton = document.getElementById('new-chat');
+    const newDialog = document.getElementById('new-dialog');
+    const confirmNew = document.getElementById('confirm-new');
     let busy = false;
     let focusDate = '';
     let conversation = [];
@@ -231,16 +335,20 @@
       }
     });
     input.addEventListener('input', resize);
+    function clearConversation() {
+      conversation = [];
+      focusDate = '';
+      try { localStorage.removeItem(STORAGE_KEY); } catch (_) { /* no storage access */ }
+      showError('');
+      render();
+      input.focus();
+    }
     newButton.addEventListener('click', () => {
-      if (!conversation.length || confirm('Начать новый разговор? Прежняя переписка будет удалена из этого браузера.')) {
-        conversation = [];
-        focusDate = '';
-        try { localStorage.removeItem(STORAGE_KEY); } catch (_) { /* no storage access */ }
-        showError('');
-        render();
-        input.focus();
-      }
+      if (busy) return;
+      if (!conversation.length) { clearConversation(); return; }
+      newDialog.showModal();
     });
+    confirmNew.addEventListener('click', clearConversation);
     loadSaved(); render(); resize();
   })();
   </script>
