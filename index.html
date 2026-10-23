@@ -8,7 +8,7 @@
   <title>Олешка — разговор из Академии</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Forum&family=PT+Serif:wght@400;700&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Forum&family=Marck+Script&family=Neucha&family=Ruslan+Display&display=swap" rel="stylesheet">
   <style>
     :root {
       color-scheme: light;
@@ -27,10 +27,10 @@
     }
     *, *::before, *::after { box-sizing: border-box; }
     html,body { min-height: 100%; margin: 0; }
-    body { font: 16px/1.5 'Golos Text', system-ui, sans-serif; color: var(--ink);
+    body { font: 17px/1.5 'Forum', Georgia, serif; color: var(--ink);
       background: radial-gradient(ellipse at 50% 0%,#d7c4a5 0%,transparent 48%),
         linear-gradient(135deg,#1a2832,#3a3b32 45%,#1b2b35); }
-    button,textarea { font: inherit; }
+    button,textarea { font: 18px/1.3 'Neucha', 'Forum', Georgia, serif; }
     button { cursor: pointer; }
     button:focus-visible,textarea:focus-visible,a:focus-visible { outline: 3px solid #d1a057; outline-offset: 3px; }
     .page { width: min(1200px,calc(100% - 40px)); height: min(900px,calc(100dvh - 44px)); min-height: 550px;
@@ -38,38 +38,37 @@
       background: var(--paper); border: 1px solid #bc9a5b;
       box-shadow: 0 30px 95px #0007, 0 0 0 5px #1e2b31, 0 0 0 6px #957a50;
       overflow: hidden; }
-    /* A dark illuminated-manuscript cover; the fortress is an atmospheric motif, not a canonical drawing. */
+    /* Actual photograph from the project Drive album “Академия (новый альбом)”. */
     .aside { min-width: 0; position: relative; overflow: hidden; display: flex; flex-direction: column;
-      padding: 28px 27px 24px; color: #f4e2bb;
-      background: radial-gradient(ellipse at 18% 0, #345062 0, transparent 55%),
-        repeating-linear-gradient(103deg, #ffffff04 0 1px, transparent 1px 17px),
-        linear-gradient(155deg,#24394a 0%,#182a38 50%,#10222f 100%);
-      border-right: 4px double #c09a60; }
-    .aside::before { content:''; pointer-events:none; position:absolute; inset: 12px;
-      border: 1px solid #a9854d83; }
-    .aside::after { content:''; pointer-events:none; position:absolute; inset: 18px;
-      border: 1px solid #ad8c5333; }
-    .corner { position:absolute; width:40px; height:40px; z-index:1; pointer-events:none; }
-    .corner.tl { top:12px; left:12px; border-top: 2px solid #d1a35c; border-left:2px solid #d1a35c; }
-    .corner.tr { top:12px; right:12px; border-top: 2px solid #d1a35c; border-right:2px solid #d1a35c; }
-    .corner.bl { bottom:12px; left:12px; border-bottom: 2px solid #d1a35c; border-left:2px solid #d1a35c; }
-    .corner.br { bottom:12px; right:12px; border-bottom: 2px solid #d1a35c; border-right:2px solid #d1a35c; }
+      padding: 34px 24px 25px; color: #fff1d6; isolation:isolate;
+      background: #1c2830; border-right:4px double #c09a60; }
+    .aside::before { content:""; position:absolute; z-index:-2; inset:0;
+      background: url('./academy.jpg') 66% center / cover no-repeat;
+      filter:saturate(.83) contrast(1.06); transform:scale(1.02); }
+    .aside::after { content:""; position:absolute; z-index:-1; inset:0;
+      background: linear-gradient(180deg,rgba(9,20,29,.96) 0%,rgba(10,23,34,.88) 23%,rgba(14,23,29,.19) 47%,rgba(13,22,26,.23) 64%,rgba(9,19,25,.92) 88%,rgba(9,19,25,.98) 100%); }
+    .aside .faint-frame { position:absolute; inset:12px; border:1px solid #eac58b9c; pointer-events:none; }
+    .aside .faint-frame::after { content:""; position:absolute; inset:6px; border:1px solid #eac58b44; }
+    .corner { position:absolute; width:34px; height:34px; z-index:1; pointer-events:none; }
+    .corner.tl { top:12px; left:12px; border-top: 2px solid #e0ba7b; border-left:2px solid #e0ba7b; }
+    .corner.tr { top:12px; right:12px; border-top: 2px solid #e0ba7b; border-right:2px solid #e0ba7b; }
+    .corner.bl { bottom:12px; left:12px; border-bottom: 2px solid #e0ba7b; border-left:2px solid #e0ba7b; }
+    .corner.br { bottom:12px; right:12px; border-bottom: 2px solid #e0ba7b; border-right:2px solid #e0ba7b; }
     .aside-body { position:relative; z-index:2; }
-    .tiny-label { text-align:center; font-size:10px; font-weight:700; letter-spacing:.23em; color:#d7b67c; }
-    .folio-line { display:flex; align-items:center; gap:10px; justify-content:center; margin: 14px 0 19px; color:#caa365; }
-    .folio-line:before, .folio-line:after { content:''; height:1px; width:70px; background:linear-gradient(90deg,transparent,#be955a); }
+    .tiny-label { text-align:center; font: 14px/1.4 'Forum',serif; letter-spacing:.09em; color:#eecb96; }
+    .folio-line { display:flex; align-items:center; gap:11px; justify-content:center; margin:10px 0 16px; color:#e9bf79; }
+    .folio-line:before, .folio-line:after { content:''; height:1px; width:65px; background:linear-gradient(90deg,transparent,#ebba7c); }
     .folio-line:after { transform:rotate(180deg); }
-    .folio-line span { font-family: Georgia, serif; font-size: 19px; }
-    .aside h1 { margin: 0; font: 400 clamp(60px,6vw,84px)/.99 'Forum',Georgia,serif; letter-spacing: .01em;
-      text-align: center; color:#fbe8c3; text-shadow:0 2px 17px #0007; }
-    .aside .subtitle { font:400 19px/1.25 'Forum',Georgia,serif; text-align:center;
-      color:#dab77f; margin: 12px 0 13px; }
-    .aside .description { font: 13px/1.8 'Golos Text',sans-serif; text-align:center; color:#e7decb; max-width:270px;
-      margin: 0 auto; }
-    .mountain-art { display:block; width:calc(100% + 54px); margin: 16px -27px 0;
-      height: min(295px,38vh); min-height:195px; flex-shrink: 0; filter:drop-shadow(0 5px 10px #0006); }
+    .folio-line span { font-family: Georgia, serif; font-size:18px; }
+    .aside h1 { margin:0; font:400 clamp(46px,4.4vw,65px)/1.08 'Ruslan Display',Georgia,serif;
+      letter-spacing:.01em; text-align:center; color:#f7e1b7; text-shadow:0 3px 18px #000e; }
+    .aside .subtitle { font:400 22px/1.25 'Forum',Georgia,serif; text-align:center;
+      color:#efd7af; margin:10px 0 13px; text-shadow:0 2px 8px #000b; }
+    .aside .description { font:20px/1.28 'Neucha','Forum',serif; text-align:center; color:#fff3df;
+      max-width:285px; margin:0 auto; text-shadow:0 2px 12px #000f; }
+    .aside-art-spacer { flex:1; min-height:60px; }
     .aside-foot { position:relative; z-index:2; margin-top:auto; border-top:1px solid #a987566c; padding: 18px 7px 0;
-      text-align:center; color:#dcccb0; font-size:12px; line-height:1.55; }
+      text-align:center; color:#dcccb0; font:16px/1.35 'Forum',Georgia,serif; text-shadow:0 2px 8px #000b; }
     .aside-foot a { display: inline-flex; color:#f3cd89; margin-top: 10px; font-weight:600; text-underline-offset:5px; }
     .main { position:relative; display:flex; flex-direction:column; min-height:0; min-width:0;
       background: repeating-linear-gradient(0deg,#4d321c04 0 1px,transparent 1px 5px),
@@ -83,11 +82,11 @@
       display:grid;place-items:center; box-shadow:0 0 0 3px #e8d3a9,0 0 0 4px #bba070; }
     .crest svg { width:33px;height:33px; }
     .heading { min-width:0; }
-    .heading .kicker { color:#88683e; letter-spacing:.16em; font-size:10px; font-weight:700; text-transform:uppercase; }
-    .top-title { font:400 30px/1.07 'Forum',Georgia,serif; color:#382c22; margin:4px 0 0; }
-    .top-sub { color:#735e49; font-size:11px; margin-top:3px; }
+    .heading .kicker { color:#88683e; letter-spacing:.07em; font-size:14px; font-family:'Forum',serif; font-weight:400; text-transform:uppercase; }
+    .top-title { font:400 30px/1.17 'Ruslan Display',Georgia,serif; color:#382c22; margin:4px 0 0; }
+    .top-sub { color:#735e49; font:15px/1.2 'Forum',Georgia,serif; margin-top:3px; }
     .new { flex:none; padding:10px 15px; border:1px solid #ae895b; background:#f7edda;
-      color:#68432d; font-size:12px; font-weight:700; min-height:41px; }
+      color:#68432d; font:18px/1.3 'Neucha','Forum',serif; min-height:41px; }
     .new:hover { background:#efe0bf; box-shadow:inset 0 0 0 1px #b78d52; }
     .messages { flex:1; min-height:0; overflow-y:auto; overscroll-behavior:contain;
       padding: 28px 38px 25px 39px; display:flex; flex-direction:column; gap:21px;
@@ -95,12 +94,12 @@
     .message { max-width:min(88%,640px); min-width:0; display:flex; flex-direction:column; gap:7px; }
     .message.model { align-self:flex-start; }
     .message.user { align-self:flex-end; }
-    .byline { font:700 11px/1.3 'Golos Text',sans-serif; color:#7d5939; letter-spacing:.10em;
-      text-transform:uppercase; display:flex; align-items:center; gap:8px; padding:0 7px; }
+    .byline { font:400 16px/1.2 'Forum',Georgia,serif; color:#7d5939; letter-spacing:.06em;
+      text-transform:none; display:flex; align-items:center; gap:8px; padding:0 7px; }
     .message.model .byline:before { content:'✦'; color:#ab804d; font-size:12px; }
     .message.user .byline { justify-content:flex-end; color:#746353; }
-    .bubble { position:relative; padding:17px 22px; line-height:1.65; white-space:pre-wrap; overflow-wrap:anywhere;
-      font-family: 'PT Serif',Georgia,serif; font-size:15px;
+    .bubble { position:relative; padding:17px 22px; line-height:1.38; white-space:pre-wrap; overflow-wrap:anywhere;
+      font-family:'Marck Script','Neucha',cursive; font-size:21px;
       background:linear-gradient(155deg,#fff9ec,#f7eedb); color:#2e2a25;
       border:1px solid #c4ad81; box-shadow:0 2px 0 #bca1782f,0 9px 20px #83633d0e;
       border-radius:3px 12px 12px 12px; }
@@ -110,7 +109,7 @@
       border-color:#9a8258; border-radius:12px 3px 12px 12px; box-shadow:3px 3px 0 #b69c7030; }
     .message.pending .bubble { font-style:italic; color:#83715b; }
     .error { margin: 0 28px 10px; padding:11px 15px; border:1px solid #b97863;
-      background:#fbebdf; color:#843c2f; font-size:13px; }
+      background:#fbebdf; color:#843c2f; font:17px/1.35 'Neucha',serif; }
     .error[hidden] { display:none; }
     .composer-wrap { z-index:1; padding:17px 32px max(18px,env(safe-area-inset-bottom));
       background:linear-gradient(0deg,#eeddbb,#f7ebd1); border-top:3px double #c5ab7c; }
@@ -119,23 +118,24 @@
       background:#fffaf0; color:#332f29; border:1px solid #ad9069; border-radius:3px;
       outline-offset:2px; padding:13px 15px; box-shadow:inset 0 1px 4px #83613718; }
     .composer textarea::placeholder { color:#8c806f; }
+    .composer textarea { font:20px/1.2 'Marck Script','Neucha',cursive; }
     .send { flex:none; width:53px;height:53px;display:grid;place-items:center; background:var(--russet);
       color:#f5e9d2; border:1px solid #713429; border-radius:3px; box-shadow:inset 0 0 0 1px #a86651; }
     .send svg { width:23px; height:23px; }
     .send:hover { background:var(--russet-dark); }
     .send:disabled,textarea:disabled,button:disabled { opacity:.55;cursor:not-allowed; }
-    .composer-note { font-size:10px; letter-spacing:.01em; text-align:right; color:#776958; margin-top:7px; }
+    .composer-note { font:15px/1.2 'Forum',serif; letter-spacing:.01em; text-align:right; color:#776958; margin-top:7px; }
     .confirm-dialog { color:#332a22; background:#f5ead1; width:min(390px,calc(100% - 30px)); border:3px double #ae8859;
       padding:25px 27px; box-shadow:0 24px 80px #0008; }
     .confirm-dialog::backdrop { background:#12202c99; backdrop-filter:blur(3px); }
     .dialog-ornament { text-align:center; color:#936935; font-size:24px; letter-spacing:.3em; }
-    .confirm-dialog h2 { font:400 32px/1.2 'Forum',Georgia,serif; text-align:center; margin:7px 0 8px; }
-    .confirm-dialog p { text-align:center; line-height:1.55; font-size:13px; }
+    .confirm-dialog h2 { font:400 26px/1.2 'Ruslan Display',Georgia,serif; text-align:center; margin:7px 0 8px; }
+    .confirm-dialog p { text-align:center; font:19px/1.35 'Neucha',serif; }
     .dialog-actions { margin-top:22px; display:flex; justify-content:center; gap:12px; }
     .dialog-actions button { min-width:116px; padding:10px 14px; border:1px solid #9f7c4e; }
     .dialog-actions .cancel { background:#f9f1e0; color:#4a3929; }
     .dialog-actions .yes { background:#6d352e; color:#fff0dc; }
-    @media(max-width:850px) { .page {grid-template-columns:295px minmax(0,1fr);} .aside{padding:25px 23px;} .mountain-art{width:calc(100% + 46px); margin-left:-23px;margin-right:-23px;} .topbar{padding-left:24px;padding-right:24px;} .messages{padding-left:26px;padding-right:26px;} .composer-wrap{padding-left:23px;padding-right:23px;} }
+    @media(max-width:850px) { .page {grid-template-columns:295px minmax(0,1fr);} .aside{padding:25px 23px;} .topbar{padding-left:24px;padding-right:24px;} .messages{padding-left:26px;padding-right:26px;} .composer-wrap{padding-left:23px;padding-right:23px;} }
     @media(max-width:700px) {
       body { background:#e9ddc5; }
       .page { width:100%;height:100dvh;min-height:0;grid-template-columns:minmax(0,1fr);margin:0;border:0;box-shadow:none; }
@@ -145,25 +145,26 @@
       .crest { width:42px;height:42px;box-shadow:0 0 0 2px #e8d3a9,0 0 0 3px #bba070; }
       .crest svg {width:26px;height:26px;}
       .top-main { gap:11px; }
-      .heading .kicker{font-size:9px;letter-spacing:.1em;}
-      .top-title { font-size:26px; }
-      .top-sub { font-size:10px; }
-      .new {font-size:11px;min-height:39px;padding:8px 10px;}
+      .heading .kicker{font-size:12px;letter-spacing:.02em;}
+      .top-title { font-size:25px; }
+      .top-sub { font-size:13px; }
+      .new {font-size:16px;min-height:39px;padding:8px 10px;}
       .messages { padding:20px 14px 22px; gap:17px; }
       .message {max-width:92%;}
-      .bubble { padding:14px 15px; font-size:14px; }
+      .bubble { padding:14px 15px; font-size:19px; }
       .composer-wrap {padding:12px 12px max(12px,env(safe-area-inset-bottom));}
-      .composer-note {font-size:10px;}
+      .composer-note {font-size:12px;}
       .send {width:48px;height:48px;}
       .composer textarea {min-height:48px;}
     }
-    @media(max-width:370px){ .top-title {font-size:22px;} .top-sub {display:none;} .new{font-size:10px;} .crest{width:37px;height:37px;} }
+    @media(max-width:370px){ .top-title {font-size:22px;} .top-sub {display:none;} .new{font-size:14px;} .crest{width:37px;height:37px;} }
     @media(prefers-reduced-motion:no-preference){ .bubble{animation:rise .21s ease-out;} @keyframes rise{from{opacity:.5;transform:translateY(5px)}to{opacity:1;transform:none}} }
   </style>
 </head>
 <body>
   <div class="page">
     <aside class="aside" aria-label="О персонаже">
+      <span class="faint-frame" aria-hidden="true"></span>
       <span class="corner tl" aria-hidden="true"></span><span class="corner tr" aria-hidden="true"></span><span class="corner bl" aria-hidden="true"></span><span class="corner br" aria-hidden="true"></span>
       <div class="aside-body">
         <div class="tiny-label">ПОДНЕБЕСЬЕ · АКАДЕМИЯ СВЕТОЗАРА</div>
@@ -172,26 +173,7 @@
         <p class="subtitle">Княжич из Академии</p>
         <p class="description">Здесь можно поговорить с Олешкой — о том, что случилось сегодня, о друзьях, учёбе и приключениях.</p>
       </div>
-      <svg class="mountain-art" viewBox="0 0 360 300" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
-        <defs>
-          <linearGradient id="mount-far" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#536678"/><stop offset="1" stop-color="#253e4c"/></linearGradient>
-          <linearGradient id="mount-near" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#314654"/><stop offset="1" stop-color="#122836"/></linearGradient>
-          <radialGradient id="mist"><stop stop-color="#dec59d" stop-opacity=".36"/><stop offset="1" stop-color="#e2c99d" stop-opacity="0"/></radialGradient>
-        </defs>
-        <ellipse cx="177" cy="105" rx="150" ry="83" fill="url(#mist)"/>
-        <circle cx="169" cy="89" r="40" fill="#d8b578" opacity=".83"/>
-        <circle cx="169" cy="89" r="49" stroke="#e7ce99" stroke-opacity=".4" fill="none" stroke-width="1"/>
-        <path d="M0 211 L36 175 65 190 106 134 142 183 170 157 215 207 252 148 298 199 334 167 360 190V300H0Z" fill="url(#mount-far)"/>
-        <path d="M0 236 L61 193 92 208 126 161 161 202 213 173 265 229 304 184 360 219V300H0Z" fill="url(#mount-near)"/>
-        <path d="M0 273 L30 258 72 255 112 240 143 247 171 212 202 214 226 235 262 258 293 248 329 259 360 251V300H0Z" fill="#112632"/>
-        <!-- A schematic fortress on a rocky Academy mountain, not a claimed precise canon illustration. -->
-        <path d="M114 231 L137 204 152 195 165 176 200 175 208 197 231 209 244 240Z" fill="#101f2b"/>
-        <path d="M133 206 V179 H140 V167 H146 V179 H153 V198 H163 V173 H169 V161 H177 V173 H184 V196 H194 V181 H199 V171 H205 V181 H211 V207Z" fill="#152833" stroke="#c29d63" stroke-width=".7"/>
-        <path d="M166 167 V136 H170 V129 H179 V136 H184 V167 Z" fill="#172a37" stroke="#c29d63" stroke-width=".7"/>
-        <path d="M173 146v-7h4v7z M140 190v-7h4v7z M198 193v-7h4v7z" fill="#f4cd88" opacity=".83"/>
-        <path d="M16 271 Q84 252 155 263 T360 270" fill="none" stroke="#bc9863" stroke-opacity=".35"/>
-        <path d="M20 286 Q105 264 190 280 T350 286" fill="none" stroke="#bc9863" stroke-opacity=".2"/>
-      </svg>
+      <div class="aside-art-spacer" aria-hidden="true"></div>
       <div class="aside-foot">Разговор сохраняется только в этом браузере.<br><a href="https://vk.com/kniazhich" target="_blank" rel="noopener noreferrer">Вернуться в Поднебесье ↗</a></div>
     </aside>
     <section class="main" aria-label="Переписка с Олешкой">
