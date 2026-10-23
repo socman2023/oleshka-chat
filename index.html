@@ -207,7 +207,7 @@
         <p class="subtitle">Княжич из Академии</p>
         <p class="description">Здрав будь! Заходи, поболтаем. Хочешь — про Академию расскажу, хочешь — про наши приключения. А можешь и про себя что-нибудь рассказать!</p>
       </div>
-      <div class="aside-foot">Разговор сохраняется только в этом браузере.<br><a href="https://vk.com/kniazhich" target="_blank" rel="noopener noreferrer">Вернуться в Поднебесье ↗</a></div>
+      <div class="aside-foot">История переписки доступна в этом браузере.<br><a href="https://vk.com/kniazhich" target="_blank" rel="noopener noreferrer">Вернуться в Поднебесье ↗</a></div>
     </aside>
     <section class="main" aria-label="Переписка с Олешкой">
       <header class="topbar">
@@ -254,6 +254,16 @@
     const confirmNew = document.getElementById('confirm-new');
     let busy = false;
     let focusDate = '';
+    let conversationId = '';
+    function newConversationId() {
+      if (crypto && typeof crypto.randomUUID === 'function') return crypto.randomUUID();
+      const bytes = new Uint8Array(16);
+      crypto.getRandomValues(bytes);
+      bytes[6] = (bytes[6] & 15) | 64;
+      bytes[8] = (bytes[8] & 63) | 128;
+      const hex = Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+      return hex.slice(0,8)+'-'+hex.slice(8,12)+'-'+hex.slice(12,16)+'-'+hex.slice(16,20)+'-'+hex.slice(20);
+    }
     let conversation = [];
 
     function loadSaved() {
@@ -263,10 +273,12 @@
           conversation = data.messages.filter(m => m && (m.role === 'user' || m.role === 'model') && typeof m.text === 'string').slice(-MAX_SAVED);
         }
         if (typeof data.focusDate === 'string') focusDate = data.focusDate;
+        if (typeof data.conversationId === 'string' && /^[0-9a-f-]{36}$/i.test(data.conversationId)) conversationId = data.conversationId;
       } catch (_) { conversation = []; focusDate = ''; }
+      if (!conversationId) conversationId = newConversationId();
     }
     function save() {
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ messages: conversation.slice(-MAX_SAVED), focusDate })); }
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ messages: conversation.slice(-MAX_SAVED), focusDate, conversationId })); }
       catch (_) { /* Private mode and storage limits: chat remains usable. */ }
     }
     function showError(message) { errorBox.textContent = message; errorBox.hidden = !message; }
@@ -311,7 +323,7 @@
       try {
         const response = await fetch(API, {
           method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: controller.signal,
-          body: JSON.stringify({ message: question, history: previous, focusDate })
+          body: JSON.stringify({ message: question, history: previous, focusDate, conversationId })
         });
         const data = await response.json();
         if (!response.ok || typeof data.reply !== 'string' || !data.reply.trim()) {
@@ -323,6 +335,7 @@
         conversation.push({role: 'user', text: question}, {role: 'model', text: data.reply});
         conversation = conversation.slice(-MAX_SAVED);
         focusDate = typeof data.knowledge?.focusDate === 'string' ? data.knowledge.focusDate : '';
+        if (typeof data.conversationId === 'string' && /^[0-9a-f-]{36}$/i.test(data.conversationId)) conversationId = data.conversationId;
         save();
       } catch (error) {
         pending.remove();
@@ -347,6 +360,7 @@
     function clearConversation() {
       conversation = [];
       focusDate = '';
+      conversationId = newConversationId();
       try { localStorage.removeItem(STORAGE_KEY); } catch (_) { /* no storage access */ }
       showError('');
       render();
