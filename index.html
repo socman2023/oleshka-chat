@@ -243,7 +243,60 @@
     const STORAGE_KEY = 'oleshka-native-chat-v1';
     const MAX_SAVED = 80;
     const MAX_CONTEXT = 12;
-    const greeting = 'О, привет! Здорово, что заглянул! Как дела?';
+    const LAST_GREETING_KEY = 'oleshka-last-greeting-v1';
+    // The 20 approved greetings: ten neutral and ten with distinct moods.
+    const GREETINGS = [
+      {mood:'friendly', text:'Здрав будь! Я Олешка. Ну что, поболтаем? Ты про меня чего узнать хочешь или сам чего расскажешь?', formal:'Здрав будьте! Я Олешка. Ну что, поболтаем? Вы про меня чего узнать хотите или сами чего расскажете?'},
+      {mood:'welcoming', text:'О! Гость пожаловал! Ну, заходи, располагайся. Как тебя звать-то?', formal:'О! Гость пожаловал! Здрав будьте! Располагайтесь. Как вас звать-то?'},
+      {mood:'curious', text:'Ага, вот и собеседник нашёлся! Ну, рассказывай, как поживаешь? Чего у тебя интересного?', formal:'Ага, вот и собеседник нашёлся! Ну, рассказывайте, как поживаете? Чего у вас интересного?'},
+      {mood:'open', text:'Здрав будь! Ты не стесняйся, спрашивай. Ежли чего не знаю, так и скажу. А может, ты меня чему научишь!', formal:'Здрав будьте! Вы не стесняйтесь, спрашивайте. Ежли чего не знаю, так и скажу. А может, вы меня чему научите!'},
+      {mood:'playful', text:'О, привет! Я Олешка, княжич росский. Только ты не думай, что я тут важничать стану. Давай знакомиться!', formal:'Здрав будьте! Я Олешка, княжич росский. Только вы не думайте, что я тут важничать стану. Давайте знакомиться!'},
+      {mood:'inquisitive', text:'Ну, что, поговорим? Я вот про ваш мир много чего не понимаю. Может, расскажешь что-нибудь интересное?', formal:'Ну, что, поговорим? Я вот про ваш мир много чего не понимаю. Может, расскажете что-нибудь интересное?'},
+      {mood:'enthusiastic', text:'Эй, здрав будь! Ты про Академию послушать хочешь? У нас тут такое иной раз творится — нарочно не придумаешь!', formal:'Здрав будьте! Вы про Академию послушать хотите? У нас тут такое иной раз творится — нарочно не придумаешь!'},
+      {mood:'hopeful', text:'О! А я уж думал, никто ко мне сегодня не заглянет. Ну, чего молчишь? Спрашивай чего-нибудь!', formal:'О! А я уж думал, никто ко мне сегодня не заглянет. Ну, чего молчите? Спрашивайте чего-нибудь!'},
+      {mood:'chatty', text:'Здрав будь! А давай так: ты мне вопрос, а потом я тебе. Только чур, отвечать по-честному!', formal:'Здрав будьте! А давайте так: вы мне вопрос, а потом я вам. Только чур, отвечать по-честному!'},
+      {mood:'friendly', text:'Ну, вот и познакомимся! Я Олешка. Учусь в Академии Светозара, всяким премудростям магическим. А ты чем занимаешься?', formal:'Ну, вот и познакомимся! Я Олешка. Учусь в Академии Светозара, всяким премудростям магическим. А вы чем занимаетесь?'},
+      {mood:'tired', text:'Уф… Здрав будь! Ты уж не обижайся, ежли я нынче не очень разговорчивый. Устал что-то зверски. Но ты рассказывай, чего у тебя нового. Я слушаю.', formal:'Уф… Здрав будьте! Вы уж не обижайтесь, ежли я нынче не очень разговорчивый. Устал что-то зверски. Но рассказывайте, чего у вас нового. Я слушаю.'},
+      {mood:'angry', text:'Здрав будь! Только сразу предупреждаю: я нынче злой как чёрт. Так что ежли чего не то буркну — не обессудь. Ну, чего хотел?', formal:'Здрав будьте! Только сразу предупреждаю: я нынче злой как чёрт. Так что ежли чего не то буркну — не обессудьте. Ну, о чём поговорить хотели?'},
+      {mood:'sad', text:'А, здрав будь… Хорошо, что заглянул. А то мне нынче что-то совсем невесело. Даже не знаю, о чём говорить. Может, ты чего расскажешь?', formal:'А, здрав будьте… Хорошо, что заглянули. А то мне нынче что-то совсем невесело. Даже не знаю, о чём говорить. Может, вы чего расскажете?'},
+      {mood:'proud', text:'О! Здрав будь! А я нынче собой доволен, не поверишь! Даже Санко, небось, придраться бы не сумел. Ха! Ну, спрашивай, чего хотел узнать!', formal:'О! Здрав будьте! А я нынче собой доволен, не поверите! Даже Санко, небось, придраться бы не сумел. Ха! Ну, спрашивайте, чего хотели узнать!'},
+      {mood:'grumpy', text:'Здрав будь. Вот ведь день какой-то дурацкий! Всё не так, всё не эдак. Ладно, не буду ворчать. Хотя нет, буду! Ты-то как поживаешь?', formal:'Здрав будьте. Вот ведь день какой-то дурацкий! Всё не так, всё не эдак. Ладно, не буду ворчать. Хотя нет, буду! А вы как поживаете?'},
+      {mood:'thoughtful', text:'Здрав будь… А я тут сижу, кумекаю кое над чем. И вроде всё просто, а как начнёшь разбираться — ничего не понятно. Ну, ладно. Ты чего рассказать хотел?', formal:'Здрав будьте… А я тут кумекаю кое над чем. И вроде всё просто, а как начнёшь разбираться — ничего не понятно. Ну, ладно. Вы чего рассказать хотели?'},
+      {mood:'mischievous', text:'Опа! Кто это к нам пожаловал? Здрав будь! Ну что, поспорим о чём-нибудь? Только учти, я упрямый. Меня так просто не переспоришь!', formal:'Опа! Кто это к нам пожаловал? Здрав будьте! Ну что, поспорим о чём-нибудь? Только учтите, я упрямый. Меня так просто не переспоришь!'},
+      {mood:'hurt', text:'А, здрав будь. Ты хоть пришёл, и то ладно. А то иной раз такое чувство, будто меня никто всерьёз не принимает. Только давай без подначек, а?', formal:'А, здрав будьте. Вы хоть заглянули, и то ладно. А то иной раз такое чувство, будто меня никто всерьёз не принимает. Только давайте без подначек, а?'},
+      {mood:'anxious', text:'Здрав будь! А мне нынче чего-то неспокойно. Вроде ничего такого, а всё равно места себе не нахожу. Давай лучше поговорим. Может, отвлекусь немного.', formal:'Здрав будьте! А мне нынче чего-то неспокойно. Вроде ничего такого, а всё равно места себе не нахожу. Давайте лучше поговорим. Может, отвлекусь немного.'},
+      {mood:'dreamy', text:'А? Ой, здрав будь! Я тут задумался, даже не сразу тебя заметил. Знаешь, иной раз такие мысли в голову лезут — сам удивляюсь. Ну, давай знакомиться!', formal:'А? Ой, здрав будьте! Я тут задумался, даже не сразу ответить успел. Знаете, иной раз такие мысли в голову лезут — сам удивляюсь. Ну, давайте знакомиться!'},
+    ];
+    function selectGreeting(previousId = 0) {
+      // Ordinary spirits have higher weight than anger/sadness, yet every one
+      // of 20 greetings has a nonzero chance. Never immediately repeat.
+      const choices = [];
+      for (let i = 0; i < GREETINGS.length; i++) {
+        if (i+1 === previousId) continue;
+        const weight = i < 10 ? 3 : 1;
+        for (let n = 0; n < weight; n++) choices.push(i+1);
+      }
+      const r = new Uint32Array(1);
+      crypto.getRandomValues(r);
+      const chosen = choices[r[0] % choices.length];
+      try { localStorage.setItem(LAST_GREETING_KEY, String(chosen)); } catch (_) {}
+      return chosen;
+    }
+    function currentGreeting() {
+      const item = GREETINGS[greetingId-1] || GREETINGS[0];
+      let words = (profileRole === 'friend' || profileRole === 'follower') ? item.text : item.formal;
+      if (profileRole === 'friend' && firstName) {
+        if (words.includes('Здрав будь!')) words=words.replace('Здрав будь!','Здрав будь, '+firstName+'!');
+        else words=firstName+'! '+words;
+      }
+      return words;
+    }
+    function vkLaunchParams() {
+      const params=new URLSearchParams(window.location.search);
+      return params.has('sign') && params.has('vk_user_id') && params.has('vk_app_id') ? window.location.search : '';
+    }
+    const vkLaunch = vkLaunchParams();
+
     const container = document.getElementById('messages');
     const form = document.getElementById('composer');
     const input = document.getElementById('input');
@@ -255,14 +308,23 @@
     let busy = false;
     let focusDate = '';
     let conversationId = '';
+    let greetingId = 0;
+    let profileRole = 'stranger';
+    let firstName = '';
+    let vkFirstName = '';
+    let vkFirstNameUserId = 0;
+    let limitUntil = 0;
+    let initialized = false;
     function newConversationId() {
       if (crypto && typeof crypto.randomUUID === 'function') return crypto.randomUUID();
-      const bytes = new Uint8Array(16);
-      crypto.getRandomValues(bytes);
-      bytes[6] = (bytes[6] & 15) | 64;
-      bytes[8] = (bytes[8] & 63) | 128;
-      const hex = Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
-      return hex.slice(0,8)+'-'+hex.slice(8,12)+'-'+hex.slice(12,16)+'-'+hex.slice(16,20)+'-'+hex.slice(20);
+      // Secure HTTPS host supports Web Crypto; do not silently group independent
+      // conversations when a browser lacks randomUUID.
+      const b = new Uint8Array(16);
+      crypto.getRandomValues(b);
+      b[6] = (b[6] & 15) | 64;
+      b[8] = (b[8] & 63) | 128;
+      const x = Array.from(b, v => v.toString(16).padStart(2,'0')).join('');
+      return x.slice(0,8)+'-'+x.slice(8,12)+'-'+x.slice(12,16)+'-'+x.slice(16,20)+'-'+x.slice(20);
     }
     let conversation = [];
 
@@ -274,11 +336,18 @@
         }
         if (typeof data.focusDate === 'string') focusDate = data.focusDate;
         if (typeof data.conversationId === 'string' && /^[0-9a-f-]{36}$/i.test(data.conversationId)) conversationId = data.conversationId;
+        if (Number.isInteger(data.greetingId) && data.greetingId >= 1 && data.greetingId <= 20) greetingId = data.greetingId;
+        if (Number.isFinite(data.limitUntil) && data.limitUntil>Date.now()) limitUntil=data.limitUntil;
       } catch (_) { conversation = []; focusDate = ''; }
       if (!conversationId) conversationId = newConversationId();
+      if (!greetingId) {
+        let last=0;
+        try{last=Number(localStorage.getItem(LAST_GREETING_KEY))||0;}catch(_){}
+        greetingId=selectGreeting(last);
+      }
     }
     function save() {
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ messages: conversation.slice(-MAX_SAVED), focusDate, conversationId })); }
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ messages: conversation.slice(-MAX_SAVED), focusDate, conversationId, greetingId, limitUntil })); }
       catch (_) { /* Private mode and storage limits: chat remains usable. */ }
     }
     function showError(message) { errorBox.textContent = message; errorBox.hidden = !message; }
@@ -298,7 +367,7 @@
     }
     function render() {
       container.replaceChildren();
-      if (!conversation.length) bubble('model', greeting);
+      if (!conversation.length) bubble('model', currentGreeting());
       else for (const msg of conversation) bubble(msg.role, msg.text);
     }
     function resize() {
@@ -310,7 +379,9 @@
     form.addEventListener('submit', async event => {
       event.preventDefault();
       const question = input.value.trim();
-      if (!question || busy) return;
+      if (!question || busy || !initialized) return;
+      if (limitUntil>Date.now()) { showError('Олешка пока не может продолжить разговор. Загляни позже.'); return; }
+      if (limitUntil) {limitUntil=0;save();}
       showError('');
       const previous = conversation.slice(-MAX_CONTEXT);
       const userNode = bubble('user', question);
@@ -323,9 +394,20 @@
       try {
         const response = await fetch(API, {
           method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: controller.signal,
-          body: JSON.stringify({ message: question, history: previous, focusDate, conversationId })
+          body: JSON.stringify({ message: question, history: previous, focusDate, conversationId, greetingId, vkLaunch, vkFirstName, vkFirstNameUserId })
         });
         const data = await response.json();
+        if (response.status === 429 && typeof data.reply === 'string' && data.reply.trim()) {
+          pending.remove();
+          bubble('model', data.reply);
+          conversation.push({role:'user',text:question},{role:'model',text:data.reply});
+          conversation=conversation.slice(-MAX_SAVED);
+          limitUntil = Number(data.retryAt) > Date.now() ? Number(data.retryAt) : Date.now()+3600000;
+          save();
+          input.disabled=true;
+          send.disabled=true;
+          return;
+        }
         if (!response.ok || typeof data.reply !== 'string' || !data.reply.trim()) {
           throw new Error(response.status === 429 ? 'Лимит разговоров временно исчерпан. Попробуй позже.' :
             'Не получилось отправить сообщение. Попробуй ещё раз.');
@@ -336,6 +418,8 @@
         conversation = conversation.slice(-MAX_SAVED);
         focusDate = typeof data.knowledge?.focusDate === 'string' ? data.knowledge.focusDate : '';
         if (typeof data.conversationId === 'string' && /^[0-9a-f-]{36}$/i.test(data.conversationId)) conversationId = data.conversationId;
+        if (Number.isInteger(data.greetingId) && data.greetingId >= 1 && data.greetingId <= 20) greetingId = data.greetingId;
+        if (Number.isFinite(data.limitUntil) && data.limitUntil>Date.now()) limitUntil=data.limitUntil;
         save();
       } catch (error) {
         pending.remove();
@@ -347,7 +431,8 @@
       } finally {
         clearTimeout(timeoutId);
         setBusy(false);
-        input.focus();
+        if (limitUntil>Date.now()) {input.disabled=true;send.disabled=true;}
+        else input.focus();
       }
     });
     input.addEventListener('keydown', event => {
@@ -361,10 +446,13 @@
       conversation = [];
       focusDate = '';
       conversationId = newConversationId();
+      greetingId = selectGreeting(greetingId);
       try { localStorage.removeItem(STORAGE_KEY); } catch (_) { /* no storage access */ }
       showError('');
+      save();
       render();
-      input.focus();
+      if(limitUntil>Date.now()){input.disabled=true;send.disabled=true;}
+      else input.focus();
     }
     newButton.addEventListener('click', () => {
       if (busy) return;
@@ -372,7 +460,47 @@
       newDialog.showModal();
     });
     confirmNew.addEventListener('click', clearConversation);
-    loadSaved(); render(); resize();
+    async function startChat() {
+      loadSaved();
+      // In a VK Mini App the same verified status applies whether it was opened
+      // through Oleshka's personal page or the community. Launch path is NOT status.
+      if (vkLaunch) {
+        try {
+          const signedId = Number(new URLSearchParams(vkLaunch.slice(1)).get('vk_user_id'));
+          if (window.vkBridge && typeof window.vkBridge.send==='function') {
+            try {
+              const info=await Promise.race([
+                window.vkBridge.send('VKWebAppGetUserInfo'),
+                new Promise((_,reject)=>setTimeout(()=>reject(new Error('VK Bridge timed out')),2500))
+              ]);
+              if (Number(info?.id)===signedId && typeof info.first_name==='string') {
+                vkFirstName=info.first_name;
+                vkFirstNameUserId=signedId;
+              }
+            }catch(_){}
+          }
+          const controller = new AbortController();
+          const t=setTimeout(()=>controller.abort(),6000);
+          try {
+            const response=await fetch(API.replace('/api/chat','/api/session'),{
+              method:'POST',headers:{'Content-Type':'application/json'},
+              body:JSON.stringify({vkLaunch,vkFirstName,vkFirstNameUserId}),signal:controller.signal
+            });
+            if (response.ok) {
+              const visitor=await response.json();
+              if (['friend','follower','community','stranger'].includes(visitor.role)) profileRole=visitor.role;
+              if (visitor.verified && typeof visitor.firstName==='string') firstName=visitor.firstName;
+            }
+          } finally {clearTimeout(t);}
+        } catch (_) { /* No trusted identity => respectful stranger greeting. */ }
+      }
+      initialized=true;
+      render();resize();
+      if (limitUntil>Date.now()) {input.disabled=true;send.disabled=true;}
+      else {input.disabled=false;send.disabled=false;}
+    }
+    input.disabled=true; send.disabled=true;
+    startChat().catch(()=>{initialized=true;render();resize();});
   })();
   </script>
 </body>
