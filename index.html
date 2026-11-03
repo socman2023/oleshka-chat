@@ -337,6 +337,7 @@
     let vkFirstNameUserId = 0;
     let limitUntil = 0;
     let initialized = false;
+    const FAILURE_NOTICE = 'Что-то сейчас не выходит разговор продолжить. Ты загляни попозже, ладно?';
     function newConversationId() {
       if (crypto && typeof crypto.randomUUID === 'function') return crypto.randomUUID();
       // Secure HTTPS host supports Web Crypto; do not silently group independent
@@ -354,7 +355,7 @@
       try {
         const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
         if (Array.isArray(data.messages)) {
-          conversation = data.messages.filter(m => m && (m.role === 'user' || m.role === 'model') && typeof m.text === 'string').slice(-MAX_SAVED);
+          conversation = data.messages.filter(m => m && (m.role === 'user' || m.role === 'model' || m.role === 'notice') && typeof m.text === 'string').slice(-MAX_SAVED);
         }
         if (typeof data.focusDate === 'string') focusDate = data.focusDate;
         if (typeof data.conversationId === 'string' && /^[0-9a-f-]{36}$/i.test(data.conversationId)) conversationId = data.conversationId;
@@ -375,7 +376,7 @@
     function showError(message) { errorBox.textContent = message; errorBox.hidden = !message; }
     function bubble(role, text, pending = false) {
       const wrap = document.createElement('div');
-      wrap.className = 'message ' + role + (pending ? ' pending' : '');
+      wrap.className = 'message ' + (role === 'notice' ? 'model' : role) + (pending ? ' pending' : '');
       const name = document.createElement('div');
       name.className = 'byline';
       name.textContent = role === 'user' ? 'Ты' : 'Олешка';
@@ -386,6 +387,12 @@
       container.appendChild(wrap);
       container.scrollTop = container.scrollHeight;
       return wrap;
+    }
+    function addNotice(text) {
+      bubble('notice', text);
+      conversation.push({role:'notice',text});
+      conversation=conversation.slice(-MAX_SAVED);
+      save();
     }
     function render() {
       container.replaceChildren();
@@ -402,10 +409,10 @@
       event.preventDefault();
       const question = input.value.trim();
       if (!question || busy || !initialized) return;
-      if (limitUntil>Date.now()) { showError('Олешка пока не может продолжить разговор. Загляни позже.'); return; }
+      if (limitUntil>Date.now()) { showError(''); return; }
       if (limitUntil) {limitUntil=0;save();}
       showError('');
-      const previous = conversation.slice(-MAX_CONTEXT);
+      const previous = conversation.filter(m=>m.role==='user'||m.role==='model').slice(-MAX_CONTEXT);
       const userNode = bubble('user', question);
       const pending = bubble('model', 'Пишет…', true);
       input.value = '';
@@ -418,22 +425,30 @@
           method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: controller.signal,
           body: JSON.stringify({ message: question, history: previous, focusDate, conversationId, greetingId, vkLaunch, vkFirstName, vkFirstNameUserId })
         });
-        const data = await response.json();
-        if (response.status === 429 && typeof data.reply === 'string' && data.reply.trim()) {
-          pending.remove();
-          bubble('model', data.reply);
-          conversation.push({role:'user',text:question},{role:'model',text:data.reply});
-          conversation=conversation.slice(-MAX_SAVED);
-          limitUntil = Number(data.retryAt) > Date.now() ? Number(data.retryAt) : Date.now()+3600000;
+        // Never render a technical upstream error or HTML response to visitors.
+        const data = await response.json().catch(()=>null);
+        if (response.status === 429 && data?.error === 'quota_exhausted') {
+          pending.remove(); userNode.remove();
+          input.value=question; resize();
+          addNotice(typeof data.reply==='string' && data.reply.trim() ?
+            data.reply : 'Ух, нынче разговоров у меня уже через край. Давай завтра продолжим, а?');
+          if(Number.isFinite(Number(data.retryAt)) && Number(data.retryAt)>Date.now())
+            limitUntil=Number(data.retryAt);
           save();
-          input.disabled=true;
-          send.disabled=true;
           return;
         }
-        if (!response.ok || typeof data.reply !== 'string' || !data.reply.trim()) {
-          throw new Error(response.status === 429 ? 'Лимит разговоров временно исчерпан. Попробуй позже.' :
-            'Не получилось отправить сообщение. Попробуй ещё раз.');
+        if (!response.ok) {
+          pending.remove(); userNode.remove();
+          input.value=question; resize();
+          const allowed=['provider_quota','provider_busy','service_unavailable',
+            'response_blocked','temporary_unavailable','knowledge_unavailable',
+            'configuration_error'].includes(data?.error);
+          addNotice(allowed && typeof data?.reply==='string' && data.reply.trim() ?
+            data.reply : FAILURE_NOTICE);
+          return;
         }
+        if(typeof data?.reply!=='string'||!data.reply.trim())
+          throw new Error('empty_response');
         pending.remove();
         bubble('model', data.reply);
         conversation.push({role: 'user', text: question}, {role: 'model', text: data.reply});
@@ -448,8 +463,7 @@
         userNode.remove();
         input.value = question;
         resize();
-        showError(error.name === 'AbortError' ? 'Ответ слишком долго не приходит. Попробуй ещё раз.' :
-          (error instanceof TypeError ? 'Нет соединения с сервером. Проверь интернет и попробуй снова.' : error.message));
+        addNotice(FAILURE_NOTICE);
       } finally {
         clearTimeout(timeoutId);
         setBusy(false);
