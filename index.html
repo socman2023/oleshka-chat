@@ -337,6 +337,7 @@
     let vkFirstNameUserId = 0;
     let limitUntil = 0;
     let initialized = false;
+    let unlockTimer = 0;
     const FAILURE_NOTICE = 'Что-то сейчас не выходит разговор продолжить. Ты загляни попозже, ладно?';
     function newConversationId() {
       if (crypto && typeof crypto.randomUUID === 'function') return crypto.randomUUID();
@@ -396,14 +397,28 @@
     }
     function render() {
       container.replaceChildren();
-      if (!conversation.length) bubble('model', currentGreeting());
-      else for (const msg of conversation) bubble(msg.role, msg.text);
+      if (!conversation.some(m=>m.role==='user'||m.role==='model')) bubble('model', currentGreeting());
+      for (const msg of conversation) bubble(msg.role, msg.text);
     }
     function resize() {
       input.style.height = 'auto';
       input.style.height = Math.min(Math.max(input.scrollHeight, 50), 152) + 'px';
     }
     function setBusy(value) { busy = value; send.disabled = value; input.disabled = value; newButton.disabled = value; }
+    function applyLimitLock() {
+      if (unlockTimer) clearTimeout(unlockTimer);
+      unlockTimer = 0;
+      if (busy || !initialized) return;
+      const remaining = limitUntil - Date.now();
+      if (remaining > 0) {
+        input.disabled = true; send.disabled = true;
+        unlockTimer = setTimeout(applyLimitLock, Math.min(60000,remaining+100));
+      } else {
+        if (limitUntil) {limitUntil=0;save();}
+        input.disabled = false; send.disabled = false;
+      }
+    }
+    window.addEventListener('focus',applyLimitLock);
 
     form.addEventListener('submit', async event => {
       event.preventDefault();
@@ -467,8 +482,8 @@
       } finally {
         clearTimeout(timeoutId);
         setBusy(false);
-        if (limitUntil>Date.now()) {input.disabled=true;send.disabled=true;}
-        else input.focus();
+        applyLimitLock();
+        if (!input.disabled) input.focus();
       }
     });
     input.addEventListener('keydown', event => {
@@ -487,8 +502,8 @@
       showError('');
       save();
       render();
-      if(limitUntil>Date.now()){input.disabled=true;send.disabled=true;}
-      else input.focus();
+      applyLimitLock();
+      if (!input.disabled) input.focus();
     }
     newButton.addEventListener('click', () => {
       if (busy) return;
@@ -532,11 +547,10 @@
       }
       initialized=true;
       render();resize();
-      if (limitUntil>Date.now()) {input.disabled=true;send.disabled=true;}
-      else {input.disabled=false;send.disabled=false;}
+      applyLimitLock();
     }
     input.disabled=true; send.disabled=true;
-    startChat().catch(()=>{initialized=true;render();resize();});
+    startChat().catch(()=>{initialized=true;render();resize();applyLimitLock();});
   })();
   </script>
 </body>
